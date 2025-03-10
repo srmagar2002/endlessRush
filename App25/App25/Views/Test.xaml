@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="App25.Views.Test"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms">
+    <ContentPage.Content>
+
+
+        <StackLayout Padding="20">
+            <Label x:Name="sliderValueLabel" Text="Value: 0" FontSize="24" HorizontalOptions="Center"/>
+
+            <skia:SKCanvasView x:Name="sliderCanvas"
+                           PaintSurface="OnCanvasPaint"
+                           EnableTouchEvents="True"
+                           Touch="OnTouchHandler"
+                           HeightRequest="50"/>
+        </StackLayout>
+
+
+        <!-- <StackLayout Orientation="Horizontal">
+            <StackLayout>
+                <Label
+                    FontSize="Title"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="Tis is test bro"
+                     x:Name="sliderValueLabel" 
+                    VerticalOptions="CenterAndExpand" />
+                <Button Clicked="Button_Clicked" Text="auduo" />
+
+                <Button Clicked="Button_Clicked_2" />
+                <Slider
+                    Maximum="1"
+                    Minimum="0"
+                    ValueChanged="Slider_ValueChanged"
+                    Value="50" />
+
+                <Button Clicked="Button_Clicked_1" Text="Click me" />
+            </StackLayout>
+            <StackLayout VerticalOptions="FillAndExpand">
+                <skia:SKCanvasView x:Name="sliderCanvas"
+                           PaintSurface="OnCanvasPaint"
+                           Touch="OnTouchHandler"
+                           HeightRequest="50"/>
+            </StackLayout>
+        </StackLayout>-->
+    </ContentPage.Content>
+</ContentPage>

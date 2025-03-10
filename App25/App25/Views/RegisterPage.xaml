@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="App25.Views.RegisterPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:App25.Views"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+    Shell.NavBarIsVisible="False">
+    <ContentPage.Content>
+        <Grid>
+            <skia:SKCanvasView x:Name="canvasView" PaintSurface="canvasView_PaintSurface" />
+            <StackLayout
+                Padding="20"
+                Orientation="Vertical"
+                Spacing="10"
+                VerticalOptions="Center">
+
+                <StackLayout Orientation="Horizontal">
+                    <StackLayout Padding="50,0,50,0" VerticalOptions="Center">
+
+                        <Image Source="{x:Static local:RegisterPage.logo}" WidthRequest="600" />
+
+                    </StackLayout>
+                    <StackLayout HorizontalOptions="FillAndExpand">
+                        <Label
+                            FontFamily="PixelFont"
+                            FontSize="80"
+                            HorizontalOptions="Center"
+                            Text="Register"
+                            TextColor="Wheat" />
+
+                        <Entry
+                            x:Name="usernameEntry"
+                            FontFamily="PixelFont"
+                            FontSize="50"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="Username"
+                            TextColor="Wheat" />
+                        <Entry
+                            x:Name="passwordEntry"
+                            FontFamily="PixelFont"
+                            FontSize="50"
+                            HorizontalTextAlignment="Center"
+                            IsPassword="True"
+                            Placeholder="Password"
+                            TextColor="Wheat" />
+                        <Entry
+                            x:Name="confirmPasswordEntry"
+                            FontFamily="PixelFont"
+                            FontSize="50"
+                            HorizontalTextAlignment="Center"
+                            IsPassword="True"
+                            Placeholder="Confirm Password"
+                            TextColor="Wheat" />
+                        <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                            <Button
+                                BackgroundColor="#ff5555"
+                                BorderColor="#550000"
+                                BorderWidth="2"
+                                Clicked="OnRegisterClicked"
+                                CornerRadius="3"
+                                FontFamily="PixelFont"
+                                FontSize="20"
+                                Text="Register"
+                                TextColor="#550000" />
+                            <Button
+                                BackgroundColor="#55ddff"
+                                BorderColor="#004455"
+                                BorderWidth="2"
+                                Clicked="OnBackToLoginClicked"
+                                CornerRadius="3"
+                                FontFamily="PixelFont"
+                                FontSize="20"
+                                Text="Back to Login"
+                                TextColor="#004455" />
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

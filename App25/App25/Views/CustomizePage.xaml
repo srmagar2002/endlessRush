@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="App25.Views.CustomizePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:App25.Views"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+    Shell.NavBarIsVisible="False">
+    <Grid>
+        <skia:SKCanvasView x:Name="canvasView" PaintSurface="OnCanvasViewPaintSurface" />
+
+        <Grid RowDefinitions="3*,18*,3*">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnGridTap" />
+            </Grid.GestureRecognizers>
+            <!--  Background Preview  -->
+
+            <!--  Character & Obstacle Preview  -->
+
+
+            <StackLayout
+                Grid.Row="1"
+                HorizontalOptions="Center"
+                Orientation="Horizontal"
+                Spacing="30">
+
+                <StackLayout Orientation="Vertical">
+                    <Label
+                        x:Name="BackgroundPreviewText"
+                        FontFamily="PixelFont"
+                        FontSize="35"
+                        HorizontalOptions="Center" />
+                    <Image
+                        x:Name="BackgroundPreview"
+                        Aspect="AspectFill"
+                        HeightRequest="500"
+                        WidthRequest="300">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackgroundPreviewTapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                </StackLayout>
+
+                <StackLayout Orientation="Vertical">
+                    <Label
+                        x:Name="CharacterPreviewText"
+                        FontFamily="PixelFont"
+                        FontSize="35"
+                        HorizontalOptions="Center" />
+                    <Image
+                        x:Name="CharacterPreview"
+                        HeightRequest="500"
+                        WidthRequest="300">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCharacterPreviewTapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+
+                <StackLayout Orientation="Vertical">
+                    <Label
+                        x:Name="ObstaclePreviewText"
+                        FontFamily="PixelFont"
+                        FontSize="35"
+                        HorizontalOptions="Center" />
+                    <Image
+                        x:Name="ObstaclePreview"
+                        HeightRequest="500"
+                        WidthRequest="300">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnObstaclePreviewTapped" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                </StackLayout>
+            </StackLayout>
+
+
+
+
+            <CollectionView
+                x:Name="BackgroundSelection"
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                HeightRequest="500"
+                HorizontalScrollBarVisibility="Always"
+                IsVisible="false"
+                ItemsSource="{Binding Backgrounds}"
+                SelectionChanged="OnBackgroundSelectionChanged"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            Padding="0,5,5,0"
+                            BorderColor="White"
+                            HasShadow="True">
+                            <Image
+                                Aspect="AspectFill"
+                                HeightRequest="500"
+                                Source="{Binding Image}"
+                                WidthRequest="500" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <CollectionView
+                x:Name="CharacterSelection"
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                IsVisible="false"
+                ItemsSource="{Binding Characters}"
+                SelectionChanged="OnCharacterSelectionChanged"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            Padding="0,100,0,100"
+                            BorderColor="White"
+                            HasShadow="True">
+                            <Image Source="{Binding Image}" WidthRequest="600" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <CollectionView
+                x:Name="ObstacleSelection"
+                Grid.Row="1"
+                HeightRequest="200"
+                IsVisible="false"
+                ItemsSource="{Binding Obstacles}"
+                SelectionChanged="OnObstacleSelectionChanged"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="50,100,0,100" BorderColor="White">
+                            <Image
+                                HeightRequest="200"
+                                Source="{Binding Image}"
+                                WidthRequest="600" />
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <!--  Confirm Button  -->
+
+            <StackLayout
+                Grid.Row="2"
+                Margin="0"
+                Padding="0"
+                HorizontalOptions="Fill"
+                Spacing="0"
+                VerticalOptions="FillAndExpand">
+                <skia:SKCanvasView
+                    x:Name="buttonSKCanvas"
+                    EnableTouchEvents="True"
+                    HorizontalOptions="Fill"
+                    PaintSurface="OnButtonPaint"
+                    Touch="OnTouch"
+                    VerticalOptions="FillAndExpand" />
+            </StackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>

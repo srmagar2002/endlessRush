@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="App25.Views.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:local="clr-namespace:App25.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+    Shell.NavBarIsVisible="False"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Grid>
+            <skia:SKCanvasView x:Name="canvasView" PaintSurface="canvasView_PaintSurface" />
+            <StackLayout
+                Padding="20"
+                Orientation="Vertical"
+                Spacing="10"
+                VerticalOptions="Center">
+
+
+                <StackLayout Orientation="Horizontal">
+
+                    <StackLayout Padding="50,0,50,0" VerticalOptions="Center">
+                        <Image Source="{x:Static local:LoginPage.logo}" WidthRequest="600" />
+                    </StackLayout>
+                    <StackLayout HorizontalOptions="FillAndExpand">
+                        <Label
+                            FontFamily="PixelFont"
+                            FontSize="80"
+                            HorizontalOptions="Center"
+                            Text="Login"
+                            TextColor="Wheat" />
+
+                        <Entry
+                            x:Name="usernameEntry"
+                            FontFamily="PixelFont"
+                            FontSize="50"
+                            HorizontalTextAlignment="Center"
+                            Placeholder="Username"
+                            TextColor="Wheat" />
+                        <Entry
+                            x:Name="passwordEntry"
+                            FontFamily="PixelFont"
+                            FontSize="50"
+                            HorizontalTextAlignment="Center"
+                            IsPassword="True"
+                            Placeholder="Password"
+                            TextColor="Wheat" />
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                            <Button
+                                Clicked="OnLoginClicked"
+                                FontFamily="PixelFont"
+                                FontSize="20"
+                                BorderWidth="2"
+                                BorderColor="#550000"
+                                TextColor="#550000"
+                                Text="Login" CornerRadius="3" BackgroundColor="#ff5555"/>
+                            <Button
+                                Clicked="OnRegisterClicked"
+                                FontFamily="PixelFont"
+                                FontSize="20"
+                                TextColor="#004455"
+                                BorderColor="#004455"
+                                BorderWidth="2"
+                                Text="Register" CornerRadius="3" BackgroundColor="#55ddff"/>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,74 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using SQLite;
+using System.IO;
+using System.Threading.Tasks;
+using App25.Models;
+using System.Net.Sockets;
+
+namespace App25.Data
+{
+    public class DatabaseHelper
+    {
+        private readonly SQLiteAsyncConnection _database;
+
+        public DatabaseHelper()
+        {
+            string dbpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "users.db3");
+            _database = new SQLiteAsyncConnection(dbpath);
+            _database.CreateTableAsync<Users>().Wait();
+        }
+
+        public async Task<int> RegisterUser(Users users)
+        {
+            var existingUser = await GetUserByUsername(users.Username);
+            if (existingUser == null)
+            {
+                return await _database.InsertAsync(users);
+            }
+            return 0;
+        }
+
+        public async Task<Users> GetUserByUsername(string username)
+        {
+            return await _database.Table<Users>().Where(u => u.Username == username).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> ValidateUser(string username, string password)
+        {
+            var user = await GetUserByUsername(username);
+            if (user != null && user.PasswordHash == password)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<int> UpdateUserScore(string username, int newScore)
+        {
+            var user = await GetUserByUsername(username);
+            if (user != null && newScore > user.HighestScore)
+            {
+                user.HighestScore = newScore;
+                return await _database.UpdateAsync(user);
+            }
+            return 0;
+        }
+
+        public async Task<int> UpdateUserCustomization(string username, string background, string character, string obstacle)
+        {
+            var user = await GetUserByUsername(username);
+            if (user != null)
+            {
+                user.BackgroundAsset = background;
+                user.CharacterAsset = character;
+                user.ObstacleAsset = obstacle;
+
+                return await _database.UpdateAsync(user);
+
+            }
+            return 0;
+        }
+    }
+}
