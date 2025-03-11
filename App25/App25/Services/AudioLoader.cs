@@ -13,10 +13,12 @@ namespace App25.Services
     {
         public ISimpleAudioPlayer player;
 
+
         public AudioLoader()
         {
             player = CrossSimpleAudioPlayer.Current;
             player.Loop = true;
+
         }
 
         public void LoadAudio(int song)
@@ -26,11 +28,15 @@ namespace App25.Services
 
             if (song == 1)
             {
-                audioFile = "App25.assets.audio.electronic.mp3";
+                audioFile = "App25.assets.audio.themeMusic.electronic.mp3";
             }
             else if (song == 2)
             {
-                audioFile = "App25.assets.audio.metal.mp3";
+                audioFile = "App25.assets.audio.themeMusic.metal.mp3";
+            }
+            else if (song == 3)
+            {
+                audioFile = "App25.assets.audio.themeMusic.miitopiaost.mp3";
             }
 
             if (player == null)
@@ -48,10 +54,15 @@ namespace App25.Services
             player.Load(stream);
         }
 
-        public void Play() => player.Play();
+        public void Play()
+        {
+            player.Loop = true;
+            player.Play();
+        }
         public void Stop() => player.Stop();
 
         public void SetVolume(double volume) => player.Volume = volume;
+
 
         public async Task FadeOut()
         {

@@ -6,10 +6,11 @@ using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.ComponentModel;
 
 namespace App25.Views
 {
-    public partial class Test : ContentPage
+    public partial class Test : ContentPage, INotifyPropertyChanged
     {
         private readonly AudioLoader audioLoader = new AudioLoader();
 
@@ -19,18 +20,33 @@ namespace App25.Views
         private readonly float _trackEnd = 1000;
         private readonly float _thumbSize = 30; // Size of the square
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        public float SliderValue
+        {
+            get => _sliderValue;
+            set
+            {
+                if (_sliderValue != value)
+                {
+                    _sliderValue = value;
+                    OnPropertyChanged(nameof(SliderValue));
+                    OnSliderValueChanged(_sliderValue); // Call function when value changes
+                }
+            }
+        }
         public Test()
         {
             audioLoader = new AudioLoader();
+            _thumbX = _trackEnd;
             InitializeComponent();
-            _thumbX = _trackStart;
         }
 
         private void OnCanvasPaint(object sender, SKPaintSurfaceEventArgs e)
         {
             var canvas = e.Surface.Canvas;
             var info = e.Info;
-            canvas.DrawText("Hello", info.Width / 2, info.Height / 2, new SKPaint { Color = SKColors.Black, TextSize = 100 });
+
+
 
             canvas.Clear(SKColors.White);
 
@@ -50,7 +66,7 @@ namespace App25.Views
             if (e.ActionType == SKTouchAction.Moved || e.ActionType == SKTouchAction.Pressed)
             {
                 _thumbX = Math.Max(_trackStart, Math.Min(e.Location.X, _trackEnd));
-                _sliderValue = (_thumbX - _trackStart) / (_trackEnd - _trackStart);
+                SliderValue = (_thumbX - _trackStart) / (_trackEnd - _trackStart);
                 sliderValueLabel.Text = $"Value: {_sliderValue:F2}";
 
                 sliderCanvas.InvalidateSurface();
@@ -58,6 +74,15 @@ namespace App25.Views
             }
         }
 
+        private void OnSliderValueChanged(float volume)
+        {
+            audioLoader.SetVolume(volume);
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         //private void Button_Clicked(object sender, EventArgs e)
         //{

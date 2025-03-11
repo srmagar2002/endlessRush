@@ -25,6 +25,7 @@
                         <Image Source="{x:Static local:LoginPage.logo}" WidthRequest="600" />
                     </StackLayout>
                     <StackLayout HorizontalOptions="FillAndExpand">
+
                         <Label
                             FontFamily="PixelFont"
                             FontSize="80"
@@ -47,6 +48,7 @@
                             IsPassword="True"
                             Placeholder="Password"
                             TextColor="Wheat" />
+
                         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                             <Button
                                 Clicked="OnLoginClicked"

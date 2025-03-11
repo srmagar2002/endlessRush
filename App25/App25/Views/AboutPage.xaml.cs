@@ -11,8 +11,10 @@ namespace App25.Views
     public partial class AboutPage : ContentPage
     {
         BitmapLoader _bitmapLoader;
+        private readonly ButtonSoundEffect _buttonSoundEffect;
         private readonly AudioLoader _audioLoader = new AudioLoader();
         private SKCanvasView canvasView;
+        private SKCanvasView settingView;
         private SKBitmap homebackgroundBitmap, EndlessRunLogoBitmap, startButtonBitmap, settingButtonBitmap, charButtonBitmap, lbBitmap;
         private SKBitmap startButtonWhiteBitmap, settingButtonWhiteBitmap, charButtonWhiteBitmap, lbWhiteBitmap;
         private SKBitmap extraBitmap;
@@ -52,7 +54,13 @@ namespace App25.Views
             canvasView.EnableTouchEvents = true;
             canvasView.Touch += OnTouch;
 
+
+            settingView = new SKCanvasView();
+            settingView.PaintSurface += SettingView_PaintSurface; ;
+
+
             _audioLoader = new AudioLoader();
+            _buttonSoundEffect = new ButtonSoundEffect();
 
             _pixelFont = new PixelFont();
             font = _pixelFont.LoadCustomfont();
@@ -65,6 +73,11 @@ namespace App25.Views
 
         }
 
+        private void SettingView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -75,7 +88,7 @@ namespace App25.Views
 
         private void MenuMenuTheme()
         {
-            _audioLoader.LoadAudio(1);
+            _audioLoader.LoadAudio(3);
             _audioLoader.Play();
         }
 
@@ -363,6 +376,7 @@ namespace App25.Views
                     {
                         Device.BeginInvokeOnMainThread(async () =>
                         {
+                            _buttonSoundEffect.Play();
                             _audioLoader.Stop();
                             await Shell.Current.GoToAsync("game");
                         });
@@ -373,6 +387,7 @@ namespace App25.Views
 
                     if (customizeButtonPressed)
                     {
+                        _buttonSoundEffect.Play();
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             await Shell.Current.GoToAsync("customize");
@@ -385,6 +400,7 @@ namespace App25.Views
 
                     if (settingButtonPressed)
                     {
+                        _buttonSoundEffect.Play();
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             //await Shell.Current.GoToAsync("setting");
@@ -397,6 +413,7 @@ namespace App25.Views
 
                     if (lbButtonPressed)
                     {
+                        _buttonSoundEffect.Play();
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             //await  Shell.Current.GoToAsync("leaderboard");
@@ -408,6 +425,7 @@ namespace App25.Views
 
                     if (logout_Deletelater)
                     {
+                        _buttonSoundEffect.Play();
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             _audioLoader.Stop();
@@ -417,6 +435,7 @@ namespace App25.Views
 
                     if (test_Deletelater)
                     {
+                        _buttonSoundEffect.Play();
                         Device.BeginInvokeOnMainThread(async () =>
                         {
                             await Shell.Current.GoToAsync("test");

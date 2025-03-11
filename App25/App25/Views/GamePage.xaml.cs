@@ -22,7 +22,9 @@ namespace App25.Views
     {
         BitmapLoader _bitmapLoader;
         AuthViewModel _authViewModel;
+
         private readonly PixelFont _pixelFont;
+
         private readonly AudioLoader _audioLoader;
         private SKTypeface _typeface { get; set; }
 
@@ -118,8 +120,10 @@ namespace App25.Views
 
             dinoHeight = 200;
             dinoWidth = 100;
+
             obstacleHeight = 210;
             obstacleMinHeight = 150;
+
             obstacleWidth = 120;
 
 
@@ -145,6 +149,7 @@ namespace App25.Views
 
 
             Content = canvasView;
+
             GamePageTheme();
 
             GameTick();
@@ -163,8 +168,9 @@ namespace App25.Views
 
         }
         public void GameTick()
+
         {
-            Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
+            Device.StartTimer(TimeSpan.FromMilliseconds(16), () => //1sec 1000ms
             {
                 UpdateGame();
                 canvasView.InvalidateSurface();

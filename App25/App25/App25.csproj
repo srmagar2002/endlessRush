@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\audio\effects\buttonclick.mp3" />
     <None Remove="assets\audio\electronic.mp3" />
     <None Remove="assets\audio\metal.mp3" />
+    <None Remove="assets\audio\themeMusic\miitopiaost.mp3" />
     <None Remove="assets\backgrounds\bg1\background1.png" />
     <None Remove="assets\backgrounds\bg1\ground1.png" />
     <None Remove="assets\backgrounds\bg2\background1.png" />
@@ -56,8 +58,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="assets\audio\electronic.mp3" />
-    <EmbeddedResource Include="assets\audio\metal.mp3" />
+    <EmbeddedResource Include="assets\audio\effects\buttonclick.mp3" />
+    <EmbeddedResource Include="assets\audio\themeMusic\electronic.mp3" />
+    <EmbeddedResource Include="assets\audio\themeMusic\metal.mp3" />
+    <EmbeddedResource Include="assets\audio\themeMusic\miitopiaost.mp3" />
     <EmbeddedResource Include="assets\backgrounds\bg1\background1.png" />
     <EmbeddedResource Include="assets\backgrounds\bg1\ground1.png" />
     <EmbeddedResource Include="assets\backgrounds\bg2\background1.png" />

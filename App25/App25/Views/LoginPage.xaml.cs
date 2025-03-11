@@ -14,6 +14,7 @@ namespace App25.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
+        private readonly ButtonSoundEffect _buttonSoundEffect = new ButtonSoundEffect();
         private SKBitmap _backgroundBitmap;
         private readonly BitmapLoader _bitmapLoader;
         private readonly AuthViewModel _viewModel;
@@ -43,6 +44,7 @@ namespace App25.Views
         }
         private async void OnLoginClicked(object sender, EventArgs e)
         {
+            _buttonSoundEffect.Play();
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;
 
@@ -61,6 +63,7 @@ namespace App25.Views
 
         private async void OnRegisterClicked(object sender, EventArgs e)
         {
+            _buttonSoundEffect.Play();
             usernameEntry.Text = string.Empty;
             passwordEntry.Text = string.Empty;
             await Shell.Current.GoToAsync("register");

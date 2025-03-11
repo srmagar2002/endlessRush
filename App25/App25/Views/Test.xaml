@@ -8,13 +8,17 @@
 
 
         <StackLayout Padding="20">
-            <Label x:Name="sliderValueLabel" Text="Value: 0" FontSize="24" HorizontalOptions="Center"/>
+            <Label
+                x:Name="sliderValueLabel"
+                FontSize="24"
+                HorizontalOptions="Center" />
 
-            <skia:SKCanvasView x:Name="sliderCanvas"
-                           PaintSurface="OnCanvasPaint"
-                           EnableTouchEvents="True"
-                           Touch="OnTouchHandler"
-                           HeightRequest="50"/>
+            <skia:SKCanvasView
+                x:Name="sliderCanvas"
+                EnableTouchEvents="True"
+                HeightRequest="50"
+                PaintSurface="OnCanvasPaint"
+                Touch="OnTouchHandler" />
         </StackLayout>
 
 
@@ -24,7 +28,7 @@
                     FontSize="Title"
                     HorizontalOptions="CenterAndExpand"
                     Text="Tis is test bro"
-                     x:Name="sliderValueLabel" 
+                     x:Name="sliderValueLabel"
                     VerticalOptions="CenterAndExpand" />
                 <Button Clicked="Button_Clicked" Text="auduo" />
 
