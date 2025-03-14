@@ -24,6 +24,8 @@ namespace App25.Views
         private readonly PixelFont _pixelFont;
         private SKTypeface font;
 
+        private ButtonSoundEffect _buttonsoundeffect;
+
         private float applyX { get; set; }
         private float applyY { get; set; }
         private float applyWidth { get; set; }
@@ -43,7 +45,7 @@ namespace App25.Views
             _customizeViewModel = new CustomizeViewModel();
             _bitmapLoader = new BitmapLoader();
             _pixelFont = new PixelFont();
-
+            _buttonsoundeffect = new ButtonSoundEffect();
             applyPressed = false;
 
             InitializeComponent();
@@ -112,6 +114,11 @@ namespace App25.Views
             ObstacleSelection.SelectionChanged += OnObstacleSelected;
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _buttonsoundeffect.SetVolume(CurrentUser.User.SoundEffectsVol);
+        }
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             font = _pixelFont.LoadCustomfont();
@@ -207,6 +214,7 @@ namespace App25.Views
                 case SKTouchAction.Pressed:
                     if (isInsideApplyButton)
                     {
+                        _buttonsoundeffect.Play();
                         ApplySelection(sender, e);
                         applyPressed = true;
                         buttonSKCanvas.InvalidateSurface();
@@ -239,12 +247,14 @@ namespace App25.Views
 
         private void OnBackgroundPreviewTapped(object sender, EventArgs e)
         {
+            _buttonsoundeffect.Play();
             BackgroundSelection.IsVisible = true;
             canvasView.InvalidateSurface();
 
         }
         private void OnBackgroundSelectionChanged(object sender, EventArgs e)
         {
+            _buttonsoundeffect.Play();
             BackgroundSelection.IsVisible = false;
             canvasView.InvalidateSurface();
 
@@ -252,24 +262,28 @@ namespace App25.Views
 
         private void OnCharacterPreviewTapped(object sender, EventArgs e)
         {
+            _buttonsoundeffect.Play();
             CharacterSelection.IsVisible = true;
             canvasView.InvalidateSurface();
         }
 
         private void OnCharacterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            _buttonsoundeffect.Play();
             CharacterSelection.IsVisible = false;
             canvasView.InvalidateSurface();
         }
 
         private void OnObstaclePreviewTapped(object sender, EventArgs e)
         {
+            _buttonsoundeffect.Play();
             ObstacleSelection.IsVisible = true;
             canvasView.InvalidateSurface();
         }
 
         private void OnObstacleSelectionChanged(object sender, EventArgs e)
         {
+            _buttonsoundeffect.Play();
             ObstacleSelection.IsVisible = false;
             canvasView.InvalidateSurface();
         }
@@ -277,13 +291,26 @@ namespace App25.Views
 
         private void OnGridTap(object sender, EventArgs e)
         {
+
             if (BackgroundSelection.IsVisible)
             {
+                _buttonsoundeffect.Play();
                 BackgroundSelection.IsVisible = false;
+                canvasView.InvalidateSurface();
+            }
+            if (CharacterSelection.IsVisible)
+            {
+                _buttonsoundeffect.Play();
                 CharacterSelection.IsVisible = false;
+                canvasView.InvalidateSurface();
+            }
+            if (ObstacleSelection.IsVisible)
+            {
+                _buttonsoundeffect.Play();
                 ObstacleSelection.IsVisible = false;
                 canvasView.InvalidateSurface();
             }
+
         }
 
 
@@ -336,7 +363,9 @@ namespace App25.Views
 
             await Application.Current.SavePropertiesAsync();
 
+            AudioLoader.Instance.NonGamePageNavigation = true;
             await DisplayAlert("Selection Saved", "Your customization has been saved!", "OK");
+            AudioLoader.Instance.Pause();
             await Navigation.PopAsync();
         }
 

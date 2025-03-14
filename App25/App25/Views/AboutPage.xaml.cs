@@ -4,22 +4,92 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Essentials;
 using App25.Services;
+using System.ComponentModel;
+using App25.ViewModels;
 
 namespace App25.Views
 {
     //37 image used
-    public partial class AboutPage : ContentPage
+    public partial class AboutPage : ContentPage, INotifyPropertyChanged
     {
-        BitmapLoader _bitmapLoader;
+        private AboutViewModel _aboutViewModel;
+        private BitmapLoader _bitmapLoader;
+
         private readonly ButtonSoundEffect _buttonSoundEffect;
         private readonly AudioLoader _audioLoader = new AudioLoader();
         private SKCanvasView canvasView;
-        private SKCanvasView settingView;
         private SKBitmap homebackgroundBitmap, EndlessRunLogoBitmap, startButtonBitmap, settingButtonBitmap, charButtonBitmap, lbBitmap;
         private SKBitmap startButtonWhiteBitmap, settingButtonWhiteBitmap, charButtonWhiteBitmap, lbWhiteBitmap;
         private SKBitmap extraBitmap;
         private float buttonX, buttonY, buttonWidth, buttonHeight;
         private bool isStartPressed { get; set; }
+
+        private bool isSettingsOn { get; set; } = false;
+
+        private float settingYOffset = 0;
+        private float settingAnimationSpeed = 250f;
+        private float settingYlimit { get; set; }
+
+        private float settingWindowX;
+        private float settingWindowY;
+        private float settingWindowWidth;
+        private float settingWindowHeight;
+        private float settingInitialY;
+
+        private float _musictrackstart;
+        private float _musictrackend;
+        private float _musictrackY;
+        private float _trackheight = 50;
+        private float _trackwidth;
+
+        private bool wasmusicSLiderPressed = false;
+
+        private float _musicthumbX;
+        private float _thumbSize = 70;
+
+        public float _musicSliderValue;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public float MusicSliderValue
+        {
+            get => _musicSliderValue;
+            set
+            {
+                if (_musicSliderValue != value)
+                {
+                    _musicSliderValue = value;
+                    OnPropertyChanged(nameof(MusicSliderValue));
+                    OnSliderValueChanged(_musicSliderValue);
+                }
+            }
+        }
+
+        private float _effecttrackstart;
+        private float _effecttrackend;
+        private float _effecttrackY;
+
+        private bool wasEffectSliderPressed = false;
+
+        private float _effectThumbX;
+
+        public float _effectSliderValue;
+        public float EffectSliderValue
+        {
+            get => _effectSliderValue;
+            set
+            {
+                if (_effectSliderValue != value)
+                {
+                    _effectSliderValue = value;
+                    OnPropertyChanged(nameof(EffectSliderValue));
+                    OnEffectValueChanged(_effectSliderValue);
+                }
+            }
+        }
+
+        private float iconSize = 100;
+
+
 
         private readonly PixelFont _pixelFont;
         private readonly SKTypeface font;
@@ -48,16 +118,12 @@ namespace App25.Views
         private const float animationAmplitude = 25f;
         public AboutPage()
         {
+            _aboutViewModel = new AboutViewModel();
             canvasView = new SKCanvasView();
 
             canvasView.PaintSurface += OnPaintSurface;
             canvasView.EnableTouchEvents = true;
             canvasView.Touch += OnTouch;
-
-
-            settingView = new SKCanvasView();
-            settingView.PaintSurface += SettingView_PaintSurface; ;
-
 
             _audioLoader = new AudioLoader();
             _buttonSoundEffect = new ButtonSoundEffect();
@@ -66,6 +132,9 @@ namespace App25.Views
             font = _pixelFont.LoadCustomfont();
             _bitmapLoader = new BitmapLoader();
 
+            MusicSliderValue = (float)CurrentUser.User.Music;
+            EffectSliderValue = (float)CurrentUser.User.SoundEffectsVol;
+
             LoadAssets();
             Content = canvasView;
             HomePageTick();
@@ -73,32 +142,47 @@ namespace App25.Views
 
         }
 
-        private void SettingView_PaintSurface(object sender, SKPaintSurfaceEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
             Shell.SetNavBarIsVisible(this, false); // Turns off the default navigation bar
             canvasView.InvalidateSurface();
+
+            ButtonSoundEffect.Instance.SetVolume(CurrentUser.User.SoundEffectsVol);
             MenuMenuTheme();
         }
 
         private void MenuMenuTheme()
         {
-            _audioLoader.LoadAudio(3);
-            _audioLoader.Play();
+            if (!AudioLoader.Instance.NonGamePageNavigation)
+            {
+                AudioLoader.Instance.LoadAudio(this.GetType());
+            }
+
+            AudioLoader.Instance.Play();
+            AudioLoader.Instance.SetVolume(CurrentUser.User.Music);
         }
 
         private void HomePageTick() // tick for the logo animation
         {
-            Device.StartTimer(TimeSpan.FromMilliseconds(33), () =>
+            Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
             {
+
                 animationTime += animationSpeed;
                 logoYOffset = (float)(Math.Sin(animationTime) * animationAmplitude);
                 canvasView.InvalidateSurface();
+
+                if (isSettingsOn && settingWindowY >= settingYlimit)
+                {
+                    settingYOffset += settingAnimationSpeed;
+                    canvasView.InvalidateSurface();
+                }
+
+                if (!isSettingsOn && settingWindowY <= settingInitialY)
+                {
+                    settingYOffset -= settingAnimationSpeed;
+                    canvasView.InvalidateSurface();
+                }
                 return true;
             });
         }
@@ -135,11 +219,26 @@ namespace App25.Views
 
         }
 
+        private void OnEffectValueChanged(float volume)
+        {
+            _buttonSoundEffect.SetVolume(volume);
+        }
+        private void OnSliderValueChanged(float volume)
+        {
+            _audioLoader.SetVolume(volume);
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             SKCanvas canvas = e.Surface.Canvas;
             int width = e.Info.Width;
             int height = e.Info.Height;
+            settingYlimit = height / 3;
+            settingInitialY = height;
 
             canvas.Clear(SKColors.White);
 
@@ -344,13 +443,169 @@ namespace App25.Views
 
             canvas.DrawText($"{CurrentUser.User.HighestScore}", scoretextX, scoretextY, scoretextPaint);
 
+            //Settings Window//
+
+            if (isSettingsOn)
+            {
+                using (var paint = new SKPaint())
+                {
+
+                    paint.ImageFilter = SKImageFilter.CreateBlur(10, 20); // Adjust blur intensity
+                    paint.Color = SKColors.Black.WithAlpha(150); // Semi-transparent dark overlay
 
 
+                    canvas.DrawRect(new SKRect(0, 0, width, height), paint);
+                }
+            }
+
+
+            settingWindowX = width / 5;
+            settingWindowY = height - settingYOffset;
+            settingWindowWidth = width - 2 * (width / 5);
+            settingWindowHeight = height - (height / 3) + 30;
+
+            var settingStyle = new SKPaint { Color = SKColors.White };
+
+            canvas.DrawRoundRect(settingWindowX, settingWindowY, settingWindowWidth, settingWindowHeight, 30, 30, settingStyle);
+
+
+            _musictrackstart = settingWindowX + settingWindowWidth / 5;
+            _musictrackend = _musictrackstart + settingWindowWidth - 2 * (settingWindowWidth / 5);
+            _musictrackY = settingWindowY + settingWindowHeight / 4;
+            _trackwidth = _musictrackend - _musictrackstart;
+
+            float _musicIncrementTrackX = _musictrackstart + 10;
+            float _musicIncrementTrackY = _musictrackY + 10;
+            float _musicIncrementTrackWidth = _musicthumbX - _musicIncrementTrackX - 20;
+            float _musicIncremenTracktHeight = _trackheight - 20;
+
+
+            float squarehalfSize = _thumbSize / 2;
+
+            float _musicthumbY = (_musictrackY + _trackheight / 2) - squarehalfSize;
+
+            using (var trackPaint = new SKPaint { Color = SKColors.Gray, IsAntialias = true })
+            using (var thumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
+            using (var itrackPaint = new SKPaint { Color = SKColors.LightBlue })
+            {
+                canvas.DrawRoundRect(_musictrackstart, _musictrackY, _trackwidth, _trackheight, 5, 5, trackPaint);
+
+                canvas.DrawRoundRect(_musicIncrementTrackX, _musicIncrementTrackY, _musicIncrementTrackWidth, _musicIncremenTracktHeight, 5, 5, itrackPaint);
+
+                canvas.DrawRect(_musicthumbX - squarehalfSize, _musicthumbY, _thumbSize, _thumbSize, thumbPaint);
+
+            }
+
+            float musicTrackIconSize = iconSize;
+            float musicTrackIconY = (_musictrackY + _trackheight / 2) - musicTrackIconSize / 2;
+            float musicTrackIconX = settingWindowX + (_musictrackstart - settingWindowX) / 2;
+
+            canvas.DrawRect(musicTrackIconX, musicTrackIconY, musicTrackIconSize, musicTrackIconSize, new SKPaint { Color = SKColors.Blue });
+
+            //effect
+
+            _effecttrackstart = _musictrackstart;
+            _effecttrackend = _musictrackend;
+            _effecttrackY = settingWindowY + settingWindowHeight / 2;
+
+            float _effectIncrementTrackX = _effecttrackstart;
+            float _effectIncrementTrackY = _effecttrackY;
+            float _effectIncrementTrackWidth = _effectThumbX - _effectIncrementTrackX;
+            float _effectIncrementTrackHeight = _trackheight;
+
+            float _effectthumbY = (_effecttrackY + _trackheight / 2) - squarehalfSize;
+
+            using (var effecttrackPaint = new SKPaint { Color = SKColors.Gray, IsAntialias = true })
+            using (var effectthumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
+            using (var effectItrackPaint = new SKPaint { Color = SKColors.LightBlue })
+            {
+
+                canvas.DrawRoundRect(_effecttrackstart, _effecttrackY, _trackwidth, _trackheight, 5, 5, effecttrackPaint);
+
+                canvas.DrawRoundRect(_effectIncrementTrackX, _effectIncrementTrackY, _effectIncrementTrackWidth, _effectIncrementTrackHeight, 5, 5, effectItrackPaint);
+                canvas.DrawRect(_effectThumbX - squarehalfSize, _effectthumbY, _thumbSize, _thumbSize, effectthumbPaint);
+            }
+            float effectTrackIconSize = iconSize;
+            float effectTrackIconX = settingWindowX + (_effecttrackstart - settingWindowX) / 2;
+            float effectTrackIconY = (_effecttrackY + _trackheight / 2) - effectTrackIconSize / 2;
+
+            canvas.DrawRect(effectTrackIconX, effectTrackIconY, effectTrackIconSize, effectTrackIconSize, new SKPaint { Color = SKColors.Brown });
+
+        }
+
+        private void MusicSliderUpdater(object sender, SKTouchEventArgs e)
+        {
+            _musicthumbX = Math.Max(_musictrackstart, Math.Min(e.Location.X, _musictrackend));
+            MusicSliderValue = (_musicthumbX - _musictrackstart) / (_musictrackend - _musictrackstart);
+            canvasView.InvalidateSurface();
+        }
+        private void EffectSliderUpdater(object sender, SKTouchEventArgs e)
+        {
+            _effectThumbX = Math.Max(_effecttrackstart, Math.Min(e.Location.X, _effecttrackend));
+            EffectSliderValue = (_effectThumbX - _effecttrackstart) / (_effecttrackend - _effecttrackstart);
+            canvasView.InvalidateSurface();
         }
 
         private void OnTouch(object sender, SKTouchEventArgs e) // touch event for the buttons
         {
             //Console.WriteLine($"{buttonX} , {buttonY}, {buttonWidth}, {buttonHeight}");
+
+
+            if (isSettingsOn)
+            {
+                bool musicsliderHover = e.Location.X >= _musictrackstart &&
+                                        e.Location.X <= _musictrackend &&
+                                        e.Location.Y >= _musictrackY &&
+                                        e.Location.Y <= _musictrackY + _trackheight;
+
+                bool effectsliderHover = e.Location.X >= _effecttrackstart &&
+                                         e.Location.X <= _effecttrackend &&
+                                         e.Location.Y >= _effecttrackY &&
+                                         e.Location.Y <= _effecttrackY + _trackheight;
+
+                if (e.ActionType == SKTouchAction.Pressed)
+                {
+                    if (musicsliderHover)
+                    {
+                        MusicSliderUpdater(sender, e);
+                        wasmusicSLiderPressed = true;
+                    }
+
+                    if (effectsliderHover)
+                    {
+                        EffectSliderUpdater(sender, e);
+                        wasEffectSliderPressed = true;
+                    }
+                }
+
+                if (e.ActionType == SKTouchAction.Moved)
+                {
+                    if (wasmusicSLiderPressed)
+                    {
+                        MusicSliderUpdater(sender, e);
+                    }
+
+                    if (wasEffectSliderPressed)
+                    {
+                        EffectSliderUpdater(sender, e);
+                    }
+                }
+
+                if (e.ActionType == SKTouchAction.Released || e.ActionType == SKTouchAction.Cancelled)
+                {
+                    wasmusicSLiderPressed = false;
+                    wasEffectSliderPressed = false;
+                }
+
+                e.Handled = true;
+
+            }
+
+            bool settingWindowPressed =
+                                          e.Location.X >= settingWindowX &&
+                                          e.Location.X <= settingWindowX + settingWindowWidth &&
+                                          e.Location.Y >= settingWindowY &&
+                                          e.Location.Y <= settingWindowY + settingWindowHeight;
 
             bool startButtonPressed = e.Location.X >= buttonX && e.Location.X <= buttonX + buttonWidth &&
                                       e.Location.Y >= buttonY && e.Location.Y <= buttonY + buttonHeight;
@@ -372,74 +627,95 @@ namespace App25.Views
             switch (e.ActionType)
             {
                 case SKTouchAction.Pressed:
-                    if (startButtonPressed)
+
+                    if (!isSettingsOn)
                     {
-                        Device.BeginInvokeOnMainThread(async () =>
+                        if (startButtonPressed)
+                        {
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
+                                _buttonSoundEffect.Play();
+                                _audioLoader.Stop();
+                                AudioLoader.Instance.NonGamePageNavigation = false;
+                                await Shell.Current.GoToAsync("game");
+                            });
+
+                            isStartPressed = true;
+                            canvasView.InvalidateSurface();
+                        }
+
+                        if (customizeButtonPressed)
                         {
                             _buttonSoundEffect.Play();
-                            _audioLoader.Stop();
-                            await Shell.Current.GoToAsync("game");
-                        });
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
+                                await Shell.Current.GoToAsync("customize");
 
-                        isStartPressed = true;
-                        canvasView.InvalidateSurface();
-                    }
+                            });
+                            isCharPressed = true;
+                            canvasView.InvalidateSurface();
 
-                    if (customizeButtonPressed)
-                    {
-                        _buttonSoundEffect.Play();
-                        Device.BeginInvokeOnMainThread(async () =>
+                        }
+
+                        if (settingButtonPressed)
                         {
-                            await Shell.Current.GoToAsync("customize");
+                            _buttonSoundEffect.Play();
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
+                                isSettingsOn = true;
+                            });
 
-                        });
-                        isCharPressed = true;
-                        canvasView.InvalidateSurface();
+                            Console.WriteLine(CurrentUser.User.Music);
+                            float userMusicVol = (float)CurrentUser.User.Music;
+                            _musicthumbX = (userMusicVol * (_musictrackend - _musictrackstart)) + _musictrackstart;
+                            float userSoundVol = (float)CurrentUser.User.SoundEffectsVol;
+                            _effectThumbX = (userSoundVol * (_effecttrackend - _effecttrackstart)) + _effecttrackstart;
 
-                    }
+                            isSettingPressed = true;
+                            canvasView.InvalidateSurface();
+                        }
 
-                    if (settingButtonPressed)
-                    {
-                        _buttonSoundEffect.Play();
-                        Device.BeginInvokeOnMainThread(async () =>
+
+                        if (lbButtonPressed)
                         {
-                            //await Shell.Current.GoToAsync("setting");
-                            await DisplayAlert("Settings", "Coming Soon", "OK");
-                        });
-                        isSettingPressed = true;
-                        canvasView.InvalidateSurface();
-                    }
+                            _buttonSoundEffect.Play();
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
 
+                                //await  Shell.Current.GoToAsync("leaderboard");
+                                await DisplayAlert("Leaderboard", "Coming Soon", "OK");
+                            });
+                            isLBPressed = true;
+                            canvasView.InvalidateSurface();
+                        }
 
-                    if (lbButtonPressed)
-                    {
-                        _buttonSoundEffect.Play();
-                        Device.BeginInvokeOnMainThread(async () =>
+                        if (logout_Deletelater)
                         {
-                            //await  Shell.Current.GoToAsync("leaderboard");
-                            await DisplayAlert("Leaderboard", "Coming Soon", "OK");
-                        });
-                        isLBPressed = true;
-                        canvasView.InvalidateSurface();
-                    }
+                            _buttonSoundEffect.Play();
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
+                                _audioLoader.Stop();
+                                await Shell.Current.GoToAsync("//LoginPage");
+                            });
+                        }
 
-                    if (logout_Deletelater)
-                    {
-                        _buttonSoundEffect.Play();
-                        Device.BeginInvokeOnMainThread(async () =>
+                        if (test_Deletelater)
                         {
-                            _audioLoader.Stop();
-                            await Shell.Current.GoToAsync("//LoginPage");
-                        });
+                            _buttonSoundEffect.Play();
+                            Device.BeginInvokeOnMainThread(async () =>
+                            {
+                                await Shell.Current.GoToAsync("test");
+                            });
+                        }
                     }
-
-                    if (test_Deletelater)
+                    if (isSettingsOn)
                     {
-                        _buttonSoundEffect.Play();
-                        Device.BeginInvokeOnMainThread(async () =>
+                        if (!settingWindowPressed)
                         {
-                            await Shell.Current.GoToAsync("test");
-                        });
+                            UpdateVol();
+                            _buttonSoundEffect.Play();
+                            isSettingsOn = false;
+                        }
                     }
                     break;
 
@@ -476,6 +752,11 @@ namespace App25.Views
                     break;
             }
             e.Handled = true;
+        }
+
+        private async void UpdateVol()
+        {
+            await _aboutViewModel.UpdateVol(MusicSliderValue, EffectSliderValue);
         }
 
 

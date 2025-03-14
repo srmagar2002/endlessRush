@@ -28,5 +28,11 @@ namespace App25.Models
 
         [NotNull]
         public string ObstacleAsset { get; set; } = "obstacle1";
+
+        [NotNull]
+        public double SoundEffectsVol { get; set; } = 1;
+
+        [NotNull]
+        public double Music { get; set; } = 0.5;
     }
 }

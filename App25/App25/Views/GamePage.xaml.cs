@@ -23,6 +23,8 @@ namespace App25.Views
         BitmapLoader _bitmapLoader;
         AuthViewModel _authViewModel;
 
+        private readonly ButtonSoundEffect buttonSoundEffect;
+
         private readonly PixelFont _pixelFont;
 
         private readonly AudioLoader _audioLoader;
@@ -89,6 +91,7 @@ namespace App25.Views
             _bitmapLoader = new BitmapLoader();
             _authViewModel = new AuthViewModel();
             canvasView = new SKCanvasView();
+            buttonSoundEffect = new ButtonSoundEffect();
 
             _audioLoader = new AudioLoader();
             _pixelFont = new PixelFont();
@@ -150,7 +153,6 @@ namespace App25.Views
 
             Content = canvasView;
 
-            GamePageTheme();
 
             GameTick();
         }
@@ -159,13 +161,22 @@ namespace App25.Views
         {
             base.OnAppearing();
             Shell.SetNavBarIsVisible(this, false);
+            buttonSoundEffect.SetVolume(CurrentUser.User.SoundEffectsVol);
+            GamePageTheme();
         }
+
 
         private void GamePageTheme()
         {
-            _audioLoader.LoadAudio(2);
-            _audioLoader.Play();
+            AudioLoader.Instance.LoadAudio(this.GetType());
+            AudioLoader.Instance.Play();
 
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            AudioLoader.Instance.Stop();
         }
         public void GameTick()
 
@@ -678,6 +689,7 @@ namespace App25.Views
                         // Pause functionality
                         if (!isPaused && pauseButtonTouched)
                         {
+                            buttonSoundEffect.Play();
                             isPaused = true;
                             isPausedPressed = true;
                             canvasView.InvalidateSurface();
@@ -689,6 +701,7 @@ namespace App25.Views
                         {
                             if (resumeButtonTouched)
                             {
+                                buttonSoundEffect.Play();
                                 isPaused = false;
                                 isResumePressed = true;
                                 canvasView.InvalidateSurface();
@@ -696,7 +709,8 @@ namespace App25.Views
                             }
                             else if (exitButtonTouched)
                             {
-                                _audioLoader.Stop();
+                                buttonSoundEffect.Play();
+                                AudioLoader.Instance.Stop();
                                 ExitGame();
                             }
                         }
@@ -705,10 +719,13 @@ namespace App25.Views
                     {
                         if (resumeButtonTouched)
                         {
+                            buttonSoundEffect.Play();
                             RestartGame();
                         }
                         else if (exitButtonTouched)
                         {
+                            buttonSoundEffect.Play();
+                            AudioLoader.Instance.Stop();
                             ExitGame();
                         }
                     }
@@ -761,7 +778,7 @@ namespace App25.Views
             isRunning = true;
             runFrame = 0;
             obstaclePassed = 0;
-            _audioLoader.Play();
+            GamePageTheme();
             groundOffset = 0;
             bgOffset = 0;
 

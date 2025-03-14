@@ -70,5 +70,21 @@ namespace App25.Data
             }
             return 0;
         }
+
+        public async Task<int> UserVolumeUpdate(string username, double musicVol, double effectVol)
+        {
+            var user = await GetUserByUsername(username);
+
+            if (user != null)
+            {
+
+                user.Music = musicVol;
+                user.SoundEffectsVol = effectVol;
+
+                return await _database.UpdateAsync(user);
+            }
+
+            return 0;
+        }
     }
 }

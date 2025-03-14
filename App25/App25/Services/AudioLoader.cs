@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using App25.Views;
 using Plugin.SimpleAudioPlayer;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,8 +13,21 @@ namespace App25.Services
 
     public class AudioLoader
     {
+        private static AudioLoader _instance;
         public ISimpleAudioPlayer player;
+        public bool NonGamePageNavigation { get; set; } = false;
 
+        public static AudioLoader Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new AudioLoader();
+                }
+                return _instance;
+            }
+        }
 
         public AudioLoader()
         {
@@ -21,30 +36,20 @@ namespace App25.Services
 
         }
 
-        public void LoadAudio(int song)
+        public void LoadAudio(Type type)
         {
 
-            string audioFile = "";
-
-            if (song == 1)
-            {
-                audioFile = "App25.assets.audio.themeMusic.electronic.mp3";
-            }
-            else if (song == 2)
-            {
-                audioFile = "App25.assets.audio.themeMusic.metal.mp3";
-            }
-            else if (song == 3)
-            {
-                audioFile = "App25.assets.audio.themeMusic.miitopiaost.mp3";
-            }
+            string audioFile = type == typeof(GamePage)
+                      ? "App25.assets.audio.themeMusic.metal.mp3"
+                      : "App25.assets.audio.themeMusic.miitopiaost.mp3";
 
             if (player == null)
             {
                 player = CrossSimpleAudioPlayer.Current;
                 player.Loop = true;
             }
-            var assembly = typeof(App).Assembly;
+
+            var assembly = typeof(AudioLoader).GetTypeInfo().Assembly;
             var stream = assembly.GetManifestResourceStream(audioFile);
             if (stream == null)
             {
@@ -56,23 +61,17 @@ namespace App25.Services
 
         public void Play()
         {
+
             player.Loop = true;
             player.Play();
+
         }
         public void Stop() => player.Stop();
+        public void Pause()
+        {
+            player.Pause();
+        }
 
         public void SetVolume(double volume) => player.Volume = volume;
-
-
-        public async Task FadeOut()
-        {
-            for (double i = player.Volume; i >= 0; i -= 0.05)
-            {
-                player.Volume = i;
-                await Task.Delay(100);
-            }
-            player.Stop();
-            player.Volume = 1.0;
-        }
     }
 }

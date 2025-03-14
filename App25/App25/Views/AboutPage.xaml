@@ -7,6 +7,8 @@
     xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     Shell.NavBarIsVisible="False">
 
+
     <local:AboutPage.Content />
+
 
 </ContentPage>

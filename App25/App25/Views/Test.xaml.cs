@@ -50,10 +50,13 @@ namespace App25.Views
 
             canvas.Clear(SKColors.White);
 
-            using (var trackPaint = new SKPaint { Color = SKColors.Gray, StrokeWidth = 5, IsAntialias = true })
+            using (var trackPaint = new SKPaint { Color = SKColors.Gray, IsAntialias = true })
             using (var thumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
             {
-                canvas.DrawLine(_trackStart, info.Height / 2, _trackEnd, info.Height / 2, trackPaint);
+                //canvas.DrawLine(_trackStart, info.Height / 2, _trackEnd, info.Height / 2, trackPaint);
+
+                float trackHeight = 30;
+                canvas.DrawRect(_trackStart, (info.Height / 2) - (trackHeight / 2), _trackEnd - _trackStart, trackHeight, trackPaint);
 
                 // Draw square instead of circle
                 float squareHalfSize = _thumbSize / 2;

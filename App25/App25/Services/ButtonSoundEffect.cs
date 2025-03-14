@@ -8,8 +8,20 @@ namespace App25.Services
 {
     public class ButtonSoundEffect
     {
+        private static ButtonSoundEffect instance;
         private ISimpleAudioPlayer _buttonAudio;
 
+        public static ButtonSoundEffect Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new ButtonSoundEffect();
+                }
+                return instance;
+            }
+        }
         public ButtonSoundEffect()
         {
             LoadButtonAudio();
