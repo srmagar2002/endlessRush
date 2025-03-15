@@ -51,6 +51,15 @@
     <None Remove="assets\others\ERlogo3D.png" />
     <None Remove="assets\others\Extra.png" />
     <None Remove="assets\others\homebackground.png" />
+    <None Remove="assets\others\icons\music\music.png" />
+    <None Remove="assets\others\icons\music\musicwhite.png" />
+    <None Remove="assets\others\icons\nomusic\nomusic.png" />
+    <None Remove="assets\others\icons\nomusic\nomusicwhite.png" />
+    <None Remove="assets\others\icons\nosound\nosound.png" />
+    <None Remove="assets\others\icons\nosound\nosoundwhite.png" />
+    <None Remove="assets\others\icons\sound\sound.png" />
+    <None Remove="assets\others\icons\sound\soundwhite.png" />
+    <None Remove="assets\others\icons\thumb.png" />
     <None Remove="assets\others\logo.png" />
     <None Remove="assets\others\sunset1.png" />
     <None Remove="assets\others\sunset2.png" />
@@ -103,6 +112,17 @@
     <EmbeddedResource Include="assets\others\ERlogo3D.png" />
     <EmbeddedResource Include="assets\others\Extra.png" />
     <EmbeddedResource Include="assets\others\homebackground.png" />
+    <EmbeddedResource Include="assets\others\icons\music\music.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="assets\others\icons\music\musicwhite.png" />
+    <EmbeddedResource Include="assets\others\icons\nomusic\nomusic.png" />
+    <EmbeddedResource Include="assets\others\icons\nomusic\nomusicwhite.png" />
+    <EmbeddedResource Include="assets\others\icons\nosound\nosound.png" />
+    <EmbeddedResource Include="assets\others\icons\nosound\nosoundwhite.png" />
+    <EmbeddedResource Include="assets\others\icons\sound\sound.png" />
+    <EmbeddedResource Include="assets\others\icons\sound\soundwhite.png" />
+    <EmbeddedResource Include="assets\others\icons\thumb.png" />
     <EmbeddedResource Include="assets\others\sunset1.png" />
     <EmbeddedResource Include="assets\others\sunset2.png" />
     <EmbeddedResource Include="assets\others\titleBoard.png" />

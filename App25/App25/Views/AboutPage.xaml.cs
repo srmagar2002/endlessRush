@@ -21,6 +21,10 @@ namespace App25.Views
         private SKBitmap homebackgroundBitmap, EndlessRunLogoBitmap, startButtonBitmap, settingButtonBitmap, charButtonBitmap, lbBitmap;
         private SKBitmap startButtonWhiteBitmap, settingButtonWhiteBitmap, charButtonWhiteBitmap, lbWhiteBitmap;
         private SKBitmap extraBitmap;
+
+
+        private SKBitmap musicBitmap, noMusicBitmap, soundBitmap, noSoundBitmap, thumbBitmap;
+
         private float buttonX, buttonY, buttonWidth, buttonHeight;
         private bool isStartPressed { get; set; }
 
@@ -87,7 +91,7 @@ namespace App25.Views
             }
         }
 
-        private float iconSize = 100;
+        private float iconSize = 125;
 
 
 
@@ -217,6 +221,20 @@ namespace App25.Views
             string extraasset = "App25.assets.others.Extra.png";
             extraBitmap = _bitmapLoader.LoadBitmapFromResource(extraasset, this.GetType());
 
+            //icon assets
+
+            string musicasset = "App25.assets.others.icons.music.music.png";
+            musicBitmap = _bitmapLoader.LoadBitmapFromResource(musicasset, this.GetType());
+            string nomusicasset = "App25.assets.others.icons.nomusic.nomusic.png";
+            noMusicBitmap = _bitmapLoader.LoadBitmapFromResource(nomusicasset, this.GetType());
+
+            string soundasset = "App25.assets.others.icons.sound.sound.png";
+            soundBitmap = _bitmapLoader.LoadBitmapFromResource(soundasset, this.GetType());
+            string nosoundasset = "App25.assets.others.icons.nosound.nosound.png";
+            noSoundBitmap = _bitmapLoader.LoadBitmapFromResource(nosoundasset, this.GetType());
+
+            string thumbAsset = "App25.assets.others.icons.thumb.png";
+            thumbBitmap = _bitmapLoader.LoadBitmapFromResource(thumbAsset, this.GetType());
         }
 
         private void OnEffectValueChanged(float volume)
@@ -464,44 +482,63 @@ namespace App25.Views
             settingWindowWidth = width - 2 * (width / 5);
             settingWindowHeight = height - (height / 3) + 30;
 
-            var settingStyle = new SKPaint { Color = SKColors.White };
+            var settingStyle = new SKPaint { Color = SKColor.Parse("008de5") };
 
-            canvas.DrawRoundRect(settingWindowX, settingWindowY, settingWindowWidth, settingWindowHeight, 30, 30, settingStyle);
+            canvas.DrawRect(settingWindowX, settingWindowY, settingWindowWidth, settingWindowHeight, settingStyle);
+
+            canvas.DrawRect(settingWindowX + 50, settingWindowY + 50, settingWindowWidth - 100, settingWindowHeight, new SKPaint { Color = SKColor.Parse("98e0ff") });
 
 
-            _musictrackstart = settingWindowX + settingWindowWidth / 5;
+            _musictrackstart = settingWindowX + settingWindowWidth / 5 + 100;
             _musictrackend = _musictrackstart + settingWindowWidth - 2 * (settingWindowWidth / 5);
             _musictrackY = settingWindowY + settingWindowHeight / 4;
             _trackwidth = _musictrackend - _musictrackstart;
 
-            float _musicIncrementTrackX = _musictrackstart + 10;
-            float _musicIncrementTrackY = _musictrackY + 10;
-            float _musicIncrementTrackWidth = _musicthumbX - _musicIncrementTrackX - 20;
-            float _musicIncremenTracktHeight = _trackheight - 20;
+            float _musicIncrementTrackX = _musictrackstart;
+            float _musicIncrementTrackY = _musictrackY;
+            float _musicIncrementTrackWidth = _musicthumbX - _musicIncrementTrackX;
+            float _musicIncremenTracktHeight = _trackheight;
 
 
             float squarehalfSize = _thumbSize / 2;
 
             float _musicthumbY = (_musictrackY + _trackheight / 2) - squarehalfSize;
 
-            using (var trackPaint = new SKPaint { Color = SKColors.Gray, IsAntialias = true })
-            using (var thumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
-            using (var itrackPaint = new SKPaint { Color = SKColors.LightBlue })
+            using (var trackPaint = new SKPaint { Color = SKColor.Parse("504416"), IsAntialias = true })
+            //using (var thumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
+            using (var itrackPaint = new SKPaint
+            {
+                Shader = SKShader.CreateLinearGradient(
+                    new SKPoint(_musicIncrementTrackX, _musicIncrementTrackY),
+                    new SKPoint(_musicIncrementTrackX, _musicIncrementTrackY + _musicIncremenTracktHeight),
+                    new SKColor[] { SKColor.Parse("#FFD42A"), SKColor.Parse("#504416") },
+                    new float[] { 0.7f, 1 },
+                    SKShaderTileMode.Clamp)
+            })
             {
                 canvas.DrawRoundRect(_musictrackstart, _musictrackY, _trackwidth, _trackheight, 5, 5, trackPaint);
 
                 canvas.DrawRoundRect(_musicIncrementTrackX, _musicIncrementTrackY, _musicIncrementTrackWidth, _musicIncremenTracktHeight, 5, 5, itrackPaint);
 
-                canvas.DrawRect(_musicthumbX - squarehalfSize, _musicthumbY, _thumbSize, _thumbSize, thumbPaint);
+                //    canvas.DrawRect(_musicthumbX - squarehalfSize, _musicthumbY, _thumbSize, _thumbSize, thumbPaint);
+                canvas.DrawBitmap(thumbBitmap, new SKRect(_musicthumbX - squarehalfSize, _musicthumbY, _musicthumbX - squarehalfSize + _thumbSize, _musicthumbY + _thumbSize));
 
             }
 
             float musicTrackIconSize = iconSize;
             float musicTrackIconY = (_musictrackY + _trackheight / 2) - musicTrackIconSize / 2;
-            float musicTrackIconX = settingWindowX + (_musictrackstart - settingWindowX) / 2;
+            float musicTrackIconX = settingWindowX + (_musictrackstart - settingWindowX) / 2 - musicTrackIconSize / 2 + 50;
 
-            canvas.DrawRect(musicTrackIconX, musicTrackIconY, musicTrackIconSize, musicTrackIconSize, new SKPaint { Color = SKColors.Blue });
+            //    canvas.DrawRect(musicTrackIconX, musicTrackIconY, musicTrackIconSize, musicTrackIconSize, new SKPaint { Color = SKColors.Blue });
+            if (MusicSliderValue == 0)
+            {
+                canvas.DrawBitmap(noMusicBitmap, new SKRect(musicTrackIconX, musicTrackIconY, musicTrackIconX + musicTrackIconSize, musicTrackIconY + musicTrackIconSize));
 
+            }
+            else if (MusicSliderValue > 0)
+            {
+                canvas.DrawBitmap(musicBitmap, new SKRect(musicTrackIconX, musicTrackIconY, musicTrackIconX + musicTrackIconSize, musicTrackIconY + musicTrackIconSize));
+            }
             //effect
 
             _effecttrackstart = _musictrackstart;
@@ -515,22 +552,42 @@ namespace App25.Views
 
             float _effectthumbY = (_effecttrackY + _trackheight / 2) - squarehalfSize;
 
-            using (var effecttrackPaint = new SKPaint { Color = SKColors.Gray, IsAntialias = true })
-            using (var effectthumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
-            using (var effectItrackPaint = new SKPaint { Color = SKColors.LightBlue })
+            using (var effecttrackPaint = new SKPaint { Color = SKColor.Parse("504416"), IsAntialias = true })
+            //using (var effectthumbPaint = new SKPaint { Color = SKColors.Blue, IsAntialias = true })
+            using (var effectItrackPaint = new SKPaint
+            {
+                Shader = SKShader.CreateLinearGradient(
+                    new SKPoint(_effectIncrementTrackX, _effectIncrementTrackY),
+                    new SKPoint(_effectIncrementTrackX, _effectIncrementTrackY + _effectIncrementTrackHeight),
+                    new SKColor[] { SKColor.Parse("#FFD42A"), SKColor.Parse("#504416") },
+                    new float[] { 0.7f, 1 },
+                    SKShaderTileMode.Clamp)
+            })
             {
 
                 canvas.DrawRoundRect(_effecttrackstart, _effecttrackY, _trackwidth, _trackheight, 5, 5, effecttrackPaint);
 
                 canvas.DrawRoundRect(_effectIncrementTrackX, _effectIncrementTrackY, _effectIncrementTrackWidth, _effectIncrementTrackHeight, 5, 5, effectItrackPaint);
-                canvas.DrawRect(_effectThumbX - squarehalfSize, _effectthumbY, _thumbSize, _thumbSize, effectthumbPaint);
+                //  canvas.DrawRect(_effectThumbX - squarehalfSize, _effectthumbY, _thumbSize, _thumbSize, effectthumbPaint);
+
+                canvas.DrawBitmap(thumbBitmap, new SKRect(_effectThumbX - squarehalfSize, _effectthumbY, _effectThumbX - squarehalfSize + _thumbSize, _effectthumbY + _thumbSize));
+
             }
             float effectTrackIconSize = iconSize;
-            float effectTrackIconX = settingWindowX + (_effecttrackstart - settingWindowX) / 2;
             float effectTrackIconY = (_effecttrackY + _trackheight / 2) - effectTrackIconSize / 2;
+            float effectTrackIconX = settingWindowX + (_effecttrackstart - settingWindowX) / 2 - effectTrackIconSize / 2 + 50;
 
-            canvas.DrawRect(effectTrackIconX, effectTrackIconY, effectTrackIconSize, effectTrackIconSize, new SKPaint { Color = SKColors.Brown });
+            //canvas.DrawRect(effectTrackIconX, effectTrackIconY, effectTrackIconSize, effectTrackIconSize, new SKPaint { Color = SKColors.Brown });
 
+            if (EffectSliderValue == 0)
+            {
+                canvas.DrawBitmap(noSoundBitmap, new SKRect(effectTrackIconX, effectTrackIconY, effectTrackIconX + effectTrackIconSize, effectTrackIconY + effectTrackIconSize));
+            }
+            else if (EffectSliderValue > 0)
+            {
+                canvas.DrawBitmap(soundBitmap, new SKRect(effectTrackIconX, effectTrackIconY, effectTrackIconX + effectTrackIconSize, effectTrackIconY + effectTrackIconSize));
+
+            }
         }
 
         private void MusicSliderUpdater(object sender, SKTouchEventArgs e)
