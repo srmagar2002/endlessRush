@@ -16,6 +16,7 @@ namespace App25
             Routing.RegisterRoute("about", typeof(AboutPage));
             Routing.RegisterRoute("game", typeof(GamePage));
             Routing.RegisterRoute("customize", typeof(CustomizePage));
+            Routing.RegisterRoute("lb", typeof(LeaderboardPage));
             Routing.RegisterRoute("test", typeof(Test));
         }
 

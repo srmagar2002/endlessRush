@@ -6,9 +6,15 @@ using System.IO;
 using System.Threading.Tasks;
 using App25.Models;
 using System.Net.Sockets;
+using System.Linq;
 
 namespace App25.Data
 {
+    public class UserScoreDTO
+    {
+        public string Username { get; set; }
+        public int HighestScore { get; set; }
+    }
     public class DatabaseHelper
     {
         private readonly SQLiteAsyncConnection _database;
@@ -85,6 +91,20 @@ namespace App25.Data
             }
 
             return 0;
+        }
+
+        public async Task<List<UserScoreDTO>> GetUserScores()
+        {
+            var users = await _database.Table<Users>()
+                .OrderByDescending(u => u.HighestScore)
+                .Take(5)
+                .ToListAsync();
+
+            return users.Select(u => new UserScoreDTO
+            {
+                Username = u.Username,
+                HighestScore = u.HighestScore,
+            }).ToList();
         }
     }
 }

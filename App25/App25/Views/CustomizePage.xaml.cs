@@ -70,7 +70,8 @@ namespace App25.Views
             Obstacles = new ObservableCollection<SkinItem>
         {
              { new SkinItem("Hurdles", ImageSource.FromResource("App25.assets.obstacles.obstacle1.png"), "obstacle1") },
-             { new SkinItem("Pipes", ImageSource.FromResource("App25.assets.obstacles.obstacle2.png"), "obstacle2") }
+             { new SkinItem("Pipes", ImageSource.FromResource("App25.assets.obstacles.obstacle2.png"), "obstacle2") },
+             { new SkinItem("Axe", ImageSource.FromResource("App25.assets.obstacles.obstacle3.png"), "obstacle3") },
         };
 
             // Binding

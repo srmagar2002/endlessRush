@@ -32,6 +32,7 @@
     <None Remove="assets\font\PixelifySans.ttf" />
     <None Remove="assets\obstacles\obstacle1.png" />
     <None Remove="assets\obstacles\obstacle2.png" />
+    <None Remove="assets\obstacles\obstacle3.png" />
     <None Remove="assets\others\buttons\applybutton\apply.png" />
     <None Remove="assets\others\buttons\charbutton\customizebutton.png" />
     <None Remove="assets\others\buttons\leaderboardbutton\lb.png" />
@@ -92,6 +93,7 @@
     <EmbeddedResource Include="assets\font\PixelifySans.ttf" />
     <EmbeddedResource Include="assets\obstacles\obstacle1.png" />
     <EmbeddedResource Include="assets\obstacles\obstacle2.png" />
+    <EmbeddedResource Include="assets\obstacles\obstacle3.png" />
     <EmbeddedResource Include="assets\others\buttons\applybutton\apply.png" />
     <EmbeddedResource Include="assets\others\buttons\charbutton\customizebutton.png" />
     <EmbeddedResource Include="assets\others\buttons\charbutton\customizebuttonactive.png" />
@@ -147,6 +149,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\GamePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LeaderboardPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\RegisterPage.xaml">

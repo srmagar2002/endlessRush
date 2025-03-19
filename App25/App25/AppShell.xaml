@@ -101,6 +101,10 @@
     <TabBar>
         <ShellContent ContentTemplate="{DataTemplate local:CustomizePage}" Route="CustomizePage" />
     </TabBar>
+
+    <TabBar>
+        <ShellContent ContentTemplate="{DataTemplate local:LeaderboardPage}" Route="LeaderboardPage" />
+    </TabBar>
     <!--
     <FlyoutItem Title="Browse" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />

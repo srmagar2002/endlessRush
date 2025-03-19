@@ -21,7 +21,7 @@ namespace App25.Views
         private SKBitmap homebackgroundBitmap, EndlessRunLogoBitmap, startButtonBitmap, settingButtonBitmap, charButtonBitmap, lbBitmap;
         private SKBitmap startButtonWhiteBitmap, settingButtonWhiteBitmap, charButtonWhiteBitmap, lbWhiteBitmap;
         private SKBitmap extraBitmap;
-
+        private SKBitmap logoutBitmap;
 
         private SKBitmap musicBitmap, noMusicBitmap, soundBitmap, noSoundBitmap, thumbBitmap;
 
@@ -93,6 +93,12 @@ namespace App25.Views
 
         private float iconSize = 125;
 
+        public float logoutX;
+        public float logoutY;
+        public float logoutWidth;
+        public float logoutHeight;
+
+        public bool isLogoutPressed { get; set; } = false;
 
 
         private readonly PixelFont _pixelFont;
@@ -174,19 +180,17 @@ namespace App25.Views
 
                 animationTime += animationSpeed;
                 logoYOffset = (float)(Math.Sin(animationTime) * animationAmplitude);
-                canvasView.InvalidateSurface();
 
                 if (isSettingsOn && settingWindowY >= settingYlimit)
                 {
                     settingYOffset += settingAnimationSpeed;
-                    canvasView.InvalidateSurface();
                 }
 
                 if (!isSettingsOn && settingWindowY <= settingInitialY)
                 {
                     settingYOffset -= settingAnimationSpeed;
-                    canvasView.InvalidateSurface();
                 }
+                canvasView.InvalidateSurface();
                 return true;
             });
         }
@@ -220,6 +224,9 @@ namespace App25.Views
 
             string extraasset = "App25.assets.others.Extra.png";
             extraBitmap = _bitmapLoader.LoadBitmapFromResource(extraasset, this.GetType());
+
+            string logoutasset = "App25.assets.others.buttons.quitbutton.quit.png";
+            logoutBitmap = _bitmapLoader.LoadBitmapFromResource(logoutasset, this.GetType());
 
             //icon assets
 
@@ -586,8 +593,39 @@ namespace App25.Views
             else if (EffectSliderValue > 0)
             {
                 canvas.DrawBitmap(soundBitmap, new SKRect(effectTrackIconX, effectTrackIconY, effectTrackIconX + effectTrackIconSize, effectTrackIconY + effectTrackIconSize));
-
             }
+
+            //330x160
+
+            float smallbuttonWidth = 330;
+            float smallbuttonHeight = 160;
+            float maxbuttonWidth = 340;
+            float maxbuttonHeight = 165;
+            float initLogoutY = effectTrackIconY + 250;
+            logoutWidth = isLogoutPressed ? maxbuttonWidth : smallbuttonWidth; //+10
+            logoutHeight = isLogoutPressed ? maxbuttonHeight : smallbuttonHeight; // +5
+
+            logoutX = isLogoutPressed ? effectTrackIconX - (maxbuttonWidth - smallbuttonWidth) / 2 : effectTrackIconX;
+            logoutY = isLogoutPressed ? initLogoutY - (maxbuttonHeight - smallbuttonHeight) / 2 : initLogoutY;
+
+
+            canvas.DrawBitmap(logoutBitmap, new SKRect(logoutX, logoutY, logoutX + logoutWidth, logoutY + logoutHeight));
+
+
+            var logoutText = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = isLogoutPressed ? SKColors.White : SKColor.Parse("800000"),
+                IsAntialias = true,
+                TextAlign = SKTextAlign.Center,
+                TextSize = 70,
+                Typeface = font,
+            };
+            float logoutTextX = logoutX + logoutWidth / 2;
+            float logoutTextY = logoutY + logoutHeight / 2 + logoutText.TextSize / 3;
+            canvas.DrawText("logout", logoutTextX, logoutTextY, logoutText);
+
+
         }
 
         private void MusicSliderUpdater(object sender, SKTouchEventArgs e)
@@ -619,6 +657,10 @@ namespace App25.Views
                                          e.Location.X <= _effecttrackend &&
                                          e.Location.Y >= _effecttrackY &&
                                          e.Location.Y <= _effecttrackY + _trackheight;
+                bool isLogoutHover = e.Location.X >= logoutX &&
+                                      e.Location.X <= logoutX + logoutWidth &&
+                                      e.Location.Y >= logoutY &&
+                                      e.Location.Y <= logoutY + logoutHeight;
 
                 if (e.ActionType == SKTouchAction.Pressed)
                 {
@@ -633,6 +675,14 @@ namespace App25.Views
                         EffectSliderUpdater(sender, e);
                         wasEffectSliderPressed = true;
                     }
+
+                    if (isLogoutHover)
+                    {
+                        isLogoutPressed = true;
+                        canvasView.InvalidateSurface();
+                        Logout();
+
+                    }
                 }
 
                 if (e.ActionType == SKTouchAction.Moved)
@@ -646,12 +696,20 @@ namespace App25.Views
                     {
                         EffectSliderUpdater(sender, e);
                     }
+
+                    if (isLogoutPressed && !isLogoutHover)
+                    {
+                        isLogoutPressed = false;
+                        canvasView.InvalidateSurface();
+                    }
                 }
 
                 if (e.ActionType == SKTouchAction.Released || e.ActionType == SKTouchAction.Cancelled)
                 {
                     wasmusicSLiderPressed = false;
                     wasEffectSliderPressed = false;
+                    isLogoutPressed = false;
+                    canvasView.InvalidateSurface();
                 }
 
                 e.Handled = true;
@@ -739,8 +797,7 @@ namespace App25.Views
                             Device.BeginInvokeOnMainThread(async () =>
                             {
 
-                                //await  Shell.Current.GoToAsync("leaderboard");
-                                await DisplayAlert("Leaderboard", "Coming Soon", "OK");
+                                await Shell.Current.GoToAsync("lb");
                             });
                             isLBPressed = true;
                             canvasView.InvalidateSurface();
@@ -816,6 +873,12 @@ namespace App25.Views
             await _aboutViewModel.UpdateVol(MusicSliderValue, EffectSliderValue);
         }
 
+        private async void Logout()
+        {
+            await Shell.Current.GoToAsync("//LoginPage");
+            AudioLoader.Instance.Stop();
+
+        }
 
     }
 }

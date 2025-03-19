@@ -26,6 +26,7 @@ namespace App25.Views
             InitializeComponent();
             LoadBackground();
             _viewModel = new AuthViewModel();
+            CurrentUser.User = null;
         }
 
         private void LoadBackground() //loads background

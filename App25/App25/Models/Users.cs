@@ -30,7 +30,7 @@ namespace App25.Models
         public string ObstacleAsset { get; set; } = "obstacle1";
 
         [NotNull]
-        public double SoundEffectsVol { get; set; } = 1;
+        public double SoundEffectsVol { get; set; } = 0.5;
 
         [NotNull]
         public double Music { get; set; } = 0.5;
