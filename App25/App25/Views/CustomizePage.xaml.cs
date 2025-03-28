@@ -130,6 +130,7 @@ namespace App25.Views
 
 
             titlebitmap = _bitmapLoader.LoadBitmapFromResource("App25.assets.others.titleBoard.png", typeof(CustomizePage));
+            Console.WriteLine($"The Width={titlebitmap.Width} The Height={titlebitmap.Height}");
 
             float titleX = width / 2 - titlebitmap.Width / 2;
             float titleY = 10;
@@ -148,12 +149,13 @@ namespace App25.Views
                     Typeface = font
                 };
 
-                float titletextX = titleX + titlebitmap.Width - titlebitmap.Width / 2;
+                float titletextX = titleX + titlebitmap.Width / 2;
                 float titletextY = titleY + titlebitmap.Height / 2 + (titletext.TextSize / 3);
 
                 if (BackgroundSelection.IsVisible)
-
+                {
                     canvas.DrawText("Select a Background", titletextX, titletextY, titletext);
+                }
                 else if (CharacterSelection.IsVisible)
                 {
                     canvas.DrawText("Select a Character", titletextX, titletextY, titletext);

@@ -61,7 +61,6 @@ namespace App25.Services
 
         public void Play()
         {
-
             player.Loop = true;
             player.Play();
 

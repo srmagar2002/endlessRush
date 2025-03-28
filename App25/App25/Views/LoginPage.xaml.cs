@@ -26,6 +26,11 @@ namespace App25.Views
             InitializeComponent();
             LoadBackground();
             _viewModel = new AuthViewModel();
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
             CurrentUser.User = null;
         }
 

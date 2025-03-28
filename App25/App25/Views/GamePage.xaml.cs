@@ -20,8 +20,8 @@ namespace App25.Views
 
     public partial class GamePage : ContentPage
     {
-        BitmapLoader _bitmapLoader;
-        AuthViewModel _authViewModel;
+        private BitmapLoader _bitmapLoader;
+        private AuthViewModel _authViewModel;
 
         private readonly ButtonSoundEffect buttonSoundEffect;
 
