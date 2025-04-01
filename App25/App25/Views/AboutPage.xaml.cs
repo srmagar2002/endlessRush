@@ -9,7 +9,7 @@ using App25.ViewModels;
 
 namespace App25.Views
 {
-    //37 image used
+    //37+ image used
     public partial class AboutPage : ContentPage, INotifyPropertyChanged
     {
         private AboutViewModel _aboutViewModel;
