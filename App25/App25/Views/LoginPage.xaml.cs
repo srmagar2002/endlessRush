@@ -46,7 +46,19 @@ namespace App25.Views
             float width = e.Info.Width;
             float height = e.Info.Height;
 
+            /*            string test = "";
+                        if (CurrentUser.User == null)
+                        {
+                            test = "hello";
+                        }
+                        else
+                        {
+                            test = CurrentUser.User.Username.ToString();
+                        }
+            */
             canvas.DrawBitmap(_backgroundBitmap, new SKRect(0, 0, width, height));
+
+            //canvas.DrawText(test, 10, 100, new SKPaint { TextSize = 70, Color = SKColors.White });
         }
         private async void OnLoginClicked(object sender, EventArgs e)
         {

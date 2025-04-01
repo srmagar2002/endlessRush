@@ -27,5 +27,27 @@ namespace App25.ViewModels
                 Console.WriteLine("Volumes Updated");
             }
         }
+
+        public async Task DeleteUser(string userName)
+        {
+            if (CurrentUser.User != null)
+            {
+
+                string deletedUser = CurrentUser.User.Username;
+                CurrentUser.User = null;
+                await _dbHelper.DeleteUser(deletedUser);
+                Console.WriteLine($"{deletedUser} account was deleted");
+
+            }
+        }
+        public async Task AudioChanger(string songNo)
+        {
+            if (CurrentUser.User != null)
+            {
+                await _dbHelper.UpdateUserMusic(CurrentUser.User.Username, songNo);
+                CurrentUser.User.NonGamePageMusic = songNo;
+                Console.WriteLine("Audio Changed");
+            }
+        }
     }
 }

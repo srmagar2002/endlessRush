@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using SkiaSharp.Views.Forms;
 using App25.Data;
+using App25.Models;
 
 namespace App25.Views
 {
@@ -27,7 +28,19 @@ namespace App25.Views
         private SKBitmap lbtitleboardbitmap;
         private SKBitmap firstRowBitmap, secondRowBitmap, thirdRowBitmap, normalRowBitmap; //Row Background
         private SKBitmap firstEmbBitmap, secondEmbBitmap, thirdEmbBitmap; //Emblem
+
+        private SKBitmap backBitmap;
+
+        private float backX;
+        private float backY;
+        private float backlength;
+
+        private bool isBackPressed;
+
+        private float emblemLength;
         private SKBitmap crownBitmap;
+
+        private float rankHeaderX, unameHeaderX, scoreHeaderX;
 
         private SKBitmap testBitmap;
 
@@ -48,6 +61,9 @@ namespace App25.Views
             _soundEffect = new ButtonSoundEffect();
             _lbViewModel = new LBViewModel();
             _font = new PixelFont();
+
+            emblemLength = 125;
+            isBackPressed = false;
 
             LoadAsset();
             LoadLBUsers();
@@ -100,6 +116,9 @@ namespace App25.Views
             string homebackgroundassets = "App25.assets.others.homebackground.png";
             testBitmap = _bitmapLoader.LoadBitmapFromResource(homebackgroundassets, this.GetType());
 
+            string backbutton = "App25.assets.others.buttons.backbutton.backbutton.png";
+            backBitmap = _bitmapLoader.LoadBitmapFromResource(backbutton, this.GetType());
+
         }
         private void CanvasPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -135,6 +154,28 @@ namespace App25.Views
 
             canvas.DrawText("leaderboard", titleTextX, titleTextY, titleText);
 
+
+            float backBitmapLength = 120;
+            float maxBackLength = 130;
+
+            backlength = isBackPressed ? maxBackLength : backBitmapLength;
+            backX = isBackPressed ? 30 - (maxBackLength - backBitmapLength) / 2 : 30;
+            backY = titleY + titleHeight / 2 - (isBackPressed ? maxBackLength : backBitmapLength) / 2;
+
+            canvas.DrawBitmap(backBitmap, new SKRect(backX, backY, backX + backlength, backY + backlength));
+
+            var backChar = new SKPaint
+            {
+                Typeface = _font.LoadCustomfont(),
+                TextSize = 80,
+                Color = isBackPressed ? SKColors.White : SKColor.Parse("005500"),
+                TextAlign = SKTextAlign.Center
+            };
+
+            float charX = backX + backlength / 2;
+            float charY = backY + backlength / 2 + backChar.TextSize / 3;
+            canvas.DrawText("<", charX, charY, backChar);
+
             // LeaderBoard
             //1414x106
 
@@ -145,13 +186,14 @@ namespace App25.Views
 
             float headerY = rowY - 15;
 
-            float rankHeaderX = rowX + rowWidth / 12;
-            float unameHeaderX = rowX + rowWidth / 3 + rowWidth / 13;
-            float scoreHeaderX = rowX + rowWidth - rowWidth / 6;
+            rankHeaderX = rowX + rowWidth / 9;
+            unameHeaderX = rowX + rowWidth / 3 + rowWidth / 8;
+            scoreHeaderX = rowX + rowWidth - rowWidth / 8;
 
             var tableHeader = new SKPaint
             {
                 Typeface = _font.LoadCustomfont(),
+                TextAlign = SKTextAlign.Center,
                 TextSize = 60
             };
             canvas.DrawText("Rank", rankHeaderX, headerY, tableHeader);
@@ -160,35 +202,122 @@ namespace App25.Views
 
             if (users.Count > 0 && users[0].HighestScore > 0)
             {
-                canvas.DrawBitmap(firstRowBitmap, new SKRect(rowX, rowY, rowX + rowWidth, rowY + rowHeight));
 
-                var tableData = new SKPaint
+                RowRenderer(canvas, 0, 0, firstRowBitmap, firstEmbBitmap, "504416");
+
+                if (users.Count > 1)
                 {
+                    if (users[1].HighestScore > 0)
+                    {
+                        RowRenderer(canvas, 1, 220, secondRowBitmap, secondEmbBitmap, "333333");
+                    }
+                }
+                if (users.Count > 2)
+                {
+                    if (users[2].HighestScore > 0)
 
-                };
+                    {
+                        RowRenderer(canvas, 2, 440, thirdRowBitmap, thirdEmbBitmap, "552200");
+                    }
+                }
+                if (users.Count > 3)
+                {
+                    if (users[3].HighestScore > 0)
+                    {
+                        RowRenderer(canvas, 3, 660, normalRowBitmap, null, "333333");
+                    }
+                }
 
-                //canvas.DrawText(users[0].Username, rowX, rowY, new SKPaint { Color = SKColors.Black, TextSize = 100 });
+                if (users.Count > 4)
+                {
+                    if (users[4].HighestScore > 0)
+                    {
+                        RowRenderer(canvas, 4, 880, normalRowBitmap, null, "333333");
+                    }
+                    //canvas.DrawText(users[0].Username, rowX, rowY, new SKPaint { Color = SKColors.Black, TextSize = 100 });
+                }
             }
+        }
+        private void RowRenderer(SKCanvas canvas, int user, float heightDiff, SKBitmap rowBitmap, SKBitmap embBitmap, string fontColor)
+        {
+            float rowYSp = rowY + heightDiff;
+
+            float embX = rankHeaderX - emblemLength / 2;
+            float embY = rowYSp + rowHeight / 2 - emblemLength / 2;
+
+            canvas.DrawBitmap(rowBitmap, new SKRect(rowX, rowYSp, rowX + rowWidth, rowYSp + rowHeight));
+            if (user == 0)
+            {
+                //106*75
+                canvas.Save();
+                float crownWidth = 169;
+                float crownHeight = 120;
+
+                float cx = rowX;
+                float cy = rowYSp;
+
+                canvas.Translate(cx, cy);
+                canvas.RotateDegrees(-45f);
+
+
+                canvas.DrawBitmap(crownBitmap, new SKRect(-crownWidth / 2, -crownHeight / 2, crownWidth / 2, crownHeight / 2));
+                canvas.Restore();
+            }
+            if (embBitmap != null)
+            {
+                canvas.DrawBitmap(embBitmap, new SKRect(embX, embY, embX + emblemLength, embY + emblemLength));
+            }
+            var tableData = new SKPaint
+            {
+                Typeface = _font.LoadCustomfont(),
+                TextAlign = SKTextAlign.Center,
+                TextSize = 80
+            };
+
+            tableData.Color = SKColor.Parse($"{fontColor}");
+            canvas.DrawText(users[user].Username, unameHeaderX, rowYSp + rowHeight / 2 + tableData.TextSize / 3, tableData);
+            canvas.DrawText(users[user].HighestScore.ToString(), scoreHeaderX, rowYSp + rowHeight / 2 + tableData.TextSize / 3, tableData);
+            canvas.DrawText($"{user + 1}", rankHeaderX, rowYSp + rowHeight / 2 + tableData.TextSize / 3, new SKPaint
+            {
+                Typeface = _font.LoadCustomfont(),
+                TextAlign = SKTextAlign.Center,
+                TextSize = 100,
+                Color = tableData.Color
+            });
 
 
         }
-
 
         private async Task getUserScore()
         {
             users = await _lbViewModel.getLBData();
-            Console.WriteLine("HEllo this is me " + users[0].Username + " " + users.Count + " " + users[1].HighestScore);
+
         }
 
         private void OnTouch(object sender, SKTouchEventArgs e)
         {
-            if (e.ActionType == SKTouchAction.Pressed && e.Location.X >= 0 && e.Location.X <= 100 && e.Location.Y >= 0 && e.Location.Y <= 100)
+            bool isBackHovered = e.Location.X >= backX &&
+                                e.Location.X <= backX + backlength &&
+                                e.Location.Y >= backY &&
+                                e.Location.Y <= backY + backlength;
+
+            if (e.ActionType == SKTouchAction.Pressed && isBackHovered)
             {
-                Shell.Current.GoToAsync("about");
+                _soundEffect.Play();
+                isBackPressed = true;
+                canvasView.InvalidateSurface();
+                Navigation.PopAsync();
             }
+
+
+            if (e.ActionType == SKTouchAction.Cancelled || e.ActionType == SKTouchAction.Released || (e.ActionType == SKTouchAction.Moved && !isBackHovered))
+            {
+                isBackPressed = false;
+                canvasView.InvalidateSurface();
+            }
+
+            e.Handled = true;
         }
-
-
 
     }
 }

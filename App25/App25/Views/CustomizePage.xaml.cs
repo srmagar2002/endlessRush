@@ -11,6 +11,7 @@ using Xamarin.Forms.Xaml;
 using System.Collections.ObjectModel;
 using App25.ViewModels;
 using App25.Services;
+using App25.Models;
 
 namespace App25.Views
 {
@@ -372,20 +373,8 @@ namespace App25.Views
             await Navigation.PopAsync();
         }
 
-        // Helper Model
-        public class SkinItem
-        {
-            public string Name { get; set; }
-            public ImageSource Image { get; set; }
-            public string Code { get; set; }
 
-            public SkinItem(string name, ImageSource image, string code)
-            {
-                Name = name;
-                Image = image;
-                Code = code;
-            }
-        }
+
 
 
     }

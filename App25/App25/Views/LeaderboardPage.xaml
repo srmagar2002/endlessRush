@@ -3,10 +3,10 @@
     x:Class="App25.Views.LeaderboardPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     xmlns:local="clr-namespace:App25.Views"
+    xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
     Shell.NavBarIsVisible="False">
 
-    <local:LeaderboardPage.Content/>
+    <local:LeaderboardPage.Content />
 
 </ContentPage>

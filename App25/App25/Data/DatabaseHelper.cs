@@ -10,11 +10,7 @@ using System.Linq;
 
 namespace App25.Data
 {
-    public class UserScoreDTO
-    {
-        public string Username { get; set; }
-        public int HighestScore { get; set; }
-    }
+
     public class DatabaseHelper
     {
         private readonly SQLiteAsyncConnection _database;
@@ -105,6 +101,26 @@ namespace App25.Data
                 Username = u.Username,
                 HighestScore = u.HighestScore,
             }).ToList();
+        }
+
+        public async Task DeleteUser(string username)
+        {
+            var user = await GetUserByUsername(username);
+            if (user != null)
+            {
+                await _database.DeleteAsync(user);
+            }
+        }
+
+        public async Task<int> UpdateUserMusic(string username, string songNo)
+        {
+            var user = await GetUserByUsername(username);
+            if (user != null)
+            {
+                user.NonGamePageMusic = songNo;
+                return await _database.UpdateAsync(user);
+            }
+            return 0;
         }
     }
 }

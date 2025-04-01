@@ -18,10 +18,24 @@ namespace App25.Views
         private readonly ButtonSoundEffect _buttonSoundEffect;
         private readonly AudioLoader _audioLoader = new AudioLoader();
         private SKCanvasView canvasView;
+
+        private bool isMusicOne { get; set; } = CurrentUser.User.NonGamePageMusic == "1" ? true : false;
+
+        private float mChangerLength,
+            containerChildAX,
+            containerChildAY,
+            containerChildAWidth,
+            containerChildAHeight,
+            containerChildBX,
+            containerChildBY,
+            containerChildBWidth,
+            containerChildBHeight;
+
+        private SKBitmap musicchanger, musicchangerActive;
         private SKBitmap homebackgroundBitmap, EndlessRunLogoBitmap, startButtonBitmap, settingButtonBitmap, charButtonBitmap, lbBitmap;
         private SKBitmap startButtonWhiteBitmap, settingButtonWhiteBitmap, charButtonWhiteBitmap, lbWhiteBitmap;
         private SKBitmap extraBitmap;
-        private SKBitmap logoutBitmap;
+        private SKBitmap logoutBitmap, deleteBitmap;
 
         private SKBitmap musicBitmap, noMusicBitmap, soundBitmap, noSoundBitmap, thumbBitmap;
 
@@ -97,9 +111,13 @@ namespace App25.Views
         public float logoutY;
         public float logoutWidth;
         public float logoutHeight;
-
         public bool isLogoutPressed { get; set; } = false;
 
+        public float deleteX;
+        public float deleteY;
+        public float deleteWidth;
+        public float deleteHeight;
+        public bool isDeletePressed { get; set; } = false;
 
         private readonly PixelFont _pixelFont;
         private readonly SKTypeface font;
@@ -164,6 +182,10 @@ namespace App25.Views
 
         private void MenuMenuTheme()
         {
+            //Console.WriteLine($" HELLOIDHFIOHDSFOIHDFIHDSIFHIHEF /-*+*-*/==={CurrentUser.User.Username}, {CurrentUser.User.NonGamePageMusic}");
+
+            AudioLoader.Instance.AudioChange(CurrentUser.User.NonGamePageMusic);
+
             if (!AudioLoader.Instance.NonGamePageNavigation)
             {
                 AudioLoader.Instance.LoadAudio(this.GetType());
@@ -225,8 +247,17 @@ namespace App25.Views
             string extraasset = "App25.assets.others.Extra.png";
             extraBitmap = _bitmapLoader.LoadBitmapFromResource(extraasset, this.GetType());
 
-            string logoutasset = "App25.assets.others.buttons.quitbutton.quit.png";
+            string logoutasset = "App25.assets.others.buttons.logoutbutton.logout.png";
             logoutBitmap = _bitmapLoader.LoadBitmapFromResource(logoutasset, this.GetType());
+
+            string deleteasset = "App25.assets.others.buttons.quitbutton.quit.png";
+            deleteBitmap = _bitmapLoader.LoadBitmapFromResource(deleteasset, this.GetType());
+
+            string _musicchanger = "App25.assets.others.buttons.musicchangerbutton.musicchanger.png";
+            string _musicchangeractive = "App25.assets.others.buttons.musicchangerbutton.musicchangerclicked.png";
+            musicchanger = _bitmapLoader.LoadBitmapFromResource(_musicchanger, this.GetType());
+            musicchangerActive = _bitmapLoader.LoadBitmapFromResource(_musicchangeractive, this.GetType());
+
 
             //icon assets
 
@@ -264,6 +295,26 @@ namespace App25.Views
             int height = e.Info.Height;
             settingYlimit = height / 3;
             settingInitialY = height;
+
+            string userName;
+            string userScore;
+
+
+            if (CurrentUser.User == null)
+            {
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    _audioLoader.Stop();
+                    await Shell.Current.GoToAsync("//LoginPage");
+                });
+                return;
+            }
+            else
+            {
+                userName = CurrentUser.User.Username;
+                userScore = CurrentUser.User.HighestScore.ToString();
+            }
+
 
             canvas.Clear(SKColors.White);
 
@@ -332,7 +383,7 @@ namespace App25.Views
             canvas.DrawText("START", textX, textY, textPaint);
 
 
-            canvas.DrawText($"Hi, {CurrentUser.User.Username}", 10, 80, new SKPaint { Color = SKColors.Black, TextSize = 70, Typeface = font });
+            canvas.DrawText($"Hi, {userName}", 10, 80, new SKPaint { Color = SKColors.Black, TextSize = 70, Typeface = font });
 
 
             //setting button
@@ -466,7 +517,7 @@ namespace App25.Views
 
             canvas.DrawText("Highest Score:", scoretextX - 40, scoretextY - scoretextPaint.TextSize, scorelabelPaint);
 
-            canvas.DrawText($"{CurrentUser.User.HighestScore}", scoretextX, scoretextY, scoretextPaint);
+            canvas.DrawText($"{userScore}", scoretextX, scoretextY, scoretextPaint);
 
             //Settings Window//
 
@@ -489,11 +540,67 @@ namespace App25.Views
             settingWindowWidth = width - 2 * (width / 5);
             settingWindowHeight = height - (height / 3) + 30;
 
+            float smallsettingWindowX = settingWindowX + 50;
+            float smallsettingWindowY = settingWindowY + 50;
+            float smallsettingWindowWidth = settingWindowWidth - 100;
+
             var settingStyle = new SKPaint { Color = SKColor.Parse("008de5") };
 
             canvas.DrawRect(settingWindowX, settingWindowY, settingWindowWidth, settingWindowHeight, settingStyle);
 
-            canvas.DrawRect(settingWindowX + 50, settingWindowY + 50, settingWindowWidth - 100, settingWindowHeight, new SKPaint { Color = SKColor.Parse("98e0ff") });
+            canvas.DrawRect(smallsettingWindowX, smallsettingWindowY, smallsettingWindowWidth, settingWindowHeight, new SKPaint { Color = SKColor.Parse("98e0ff") });
+
+
+            // Music Changer Container
+            float containerWidth = 300;
+            float containerHeight = 140;
+            float containerX = smallsettingWindowX + smallsettingWindowWidth / 2 - containerWidth / 2;
+            float containerY = smallsettingWindowY + 30;
+
+            mChangerLength = containerHeight;
+            //first Bitmap
+            containerChildAX = containerX;
+            containerChildAY = containerY;
+            containerChildAWidth = containerX + mChangerLength;
+            containerChildAHeight = containerY + mChangerLength;
+
+            var mChangerPaint = new SKPaint
+            {
+                Typeface = font,
+                TextAlign = SKTextAlign.Center,
+                TextSize = 90,
+            };
+
+            canvas.DrawBitmap(isMusicOne ? musicchangerActive : musicchanger,
+                new SKRect(containerChildAX, containerChildAY, containerChildAWidth, containerChildAHeight));
+            mChangerPaint.Color = isMusicOne ? SKColors.White : SKColor.Parse("371a60");
+
+            canvas.DrawText("A",
+                            containerChildAX + mChangerLength / 2,
+                            containerChildAY + mChangerLength / 2 + mChangerPaint.TextSize / 5,
+                            mChangerPaint);
+
+
+            //second Bitmap
+            containerChildBX = containerX + containerWidth - mChangerLength;
+            containerChildBY = containerY;
+            containerChildBWidth = containerChildBX + mChangerLength;
+            containerChildBHeight = containerY + containerHeight;
+
+            canvas.DrawBitmap(isMusicOne ? musicchanger : musicchangerActive,
+                new SKRect(
+                containerChildBX,
+                containerChildBY,
+                containerChildBWidth,
+                containerChildBHeight));
+
+            mChangerPaint.Color = isMusicOne ? SKColor.Parse("371a60") : SKColors.White;
+
+            canvas.DrawText("B",
+                containerChildBX + mChangerLength / 2,
+                containerChildBY + mChangerLength / 2 + mChangerPaint.TextSize / 5,
+                mChangerPaint);
+
 
 
             _musictrackstart = settingWindowX + settingWindowWidth / 5 + 100;
@@ -602,6 +709,7 @@ namespace App25.Views
             float maxbuttonWidth = 340;
             float maxbuttonHeight = 165;
             float initLogoutY = effectTrackIconY + 250;
+
             logoutWidth = isLogoutPressed ? maxbuttonWidth : smallbuttonWidth; //+10
             logoutHeight = isLogoutPressed ? maxbuttonHeight : smallbuttonHeight; // +5
 
@@ -615,17 +723,39 @@ namespace App25.Views
             var logoutText = new SKPaint
             {
                 Style = SKPaintStyle.Fill,
-                Color = isLogoutPressed ? SKColors.White : SKColor.Parse("800000"),
+                Color = isLogoutPressed ? SKColors.White : SKColor.Parse("786721"),
                 IsAntialias = true,
                 TextAlign = SKTextAlign.Center,
                 TextSize = 70,
                 Typeface = font,
             };
+
             float logoutTextX = logoutX + logoutWidth / 2;
             float logoutTextY = logoutY + logoutHeight / 2 + logoutText.TextSize / 3;
             canvas.DrawText("logout", logoutTextX, logoutTextY, logoutText);
 
+            float initDeleteX = effectTrackIconX + smallbuttonWidth + 150;
 
+            deleteWidth = isDeletePressed ? maxbuttonWidth : smallbuttonWidth;
+            deleteHeight = isDeletePressed ? maxbuttonHeight : smallbuttonHeight;
+
+            deleteX = isDeletePressed ? initDeleteX - (maxbuttonWidth - smallbuttonWidth) / 2 : initDeleteX;
+            deleteY = isDeletePressed ? initLogoutY - (maxbuttonHeight - smallbuttonHeight) / 2 : initLogoutY;
+
+            canvas.DrawBitmap(deleteBitmap, new SKRect(deleteX, deleteY, deleteX + deleteWidth, deleteY + deleteHeight));
+
+            var deleteText = new SKPaint
+            {
+                Style = SKPaintStyle.Fill,
+                Color = isDeletePressed ? SKColors.White : SKColor.Parse("800000"),
+                IsAntialias = true,
+                TextAlign = SKTextAlign.Center,
+                TextSize = 70,
+                Typeface = font,
+            };
+            float deleteTextX = deleteX + deleteWidth / 2;
+            float deleteTextY = deleteY + deleteHeight / 2 + deleteText.TextSize / 3;
+            canvas.DrawText("delete", deleteTextX, deleteTextY, deleteText);
         }
 
         private void MusicSliderUpdater(object sender, SKTouchEventArgs e)
@@ -641,7 +771,7 @@ namespace App25.Views
             canvasView.InvalidateSurface();
         }
 
-        private void OnTouch(object sender, SKTouchEventArgs e) // touch event for the buttons
+        private async void OnTouch(object sender, SKTouchEventArgs e) // touch event for the buttons
         {
             //Console.WriteLine($"{buttonX} , {buttonY}, {buttonWidth}, {buttonHeight}");
 
@@ -661,9 +791,53 @@ namespace App25.Views
                                       e.Location.X <= logoutX + logoutWidth &&
                                       e.Location.Y >= logoutY &&
                                       e.Location.Y <= logoutY + logoutHeight;
+                bool isDeleteHover = e.Location.X >= deleteX &&
+                                      e.Location.X <= deleteX + deleteWidth &&
+                                      e.Location.Y >= deleteY &&
+                                      e.Location.Y <= deleteY + deleteHeight;
+                bool isMusicAHover = e.Location.X >= containerChildAX &&
+                                    e.Location.X <= containerChildAX + mChangerLength &&
+                                    e.Location.Y >= containerChildAY &&
+                                    e.Location.Y <= containerChildAY + mChangerLength;
+                bool isMusicBHover = e.Location.X >= containerChildBX &&
+                                    e.Location.X <= containerChildBX + mChangerLength &&
+                                    e.Location.Y >= containerChildBY &&
+                                    e.Location.Y <= containerChildBY + mChangerLength;
 
                 if (e.ActionType == SKTouchAction.Pressed)
                 {
+                    if (isMusicAHover)
+                    {
+                        if (isMusicOne) { }
+                        else if (isMusicOne == false)
+                        {
+                            _buttonSoundEffect.Play();
+                            isMusicOne = true;
+                            AudioLoader.Instance.AudioChange("1");
+                            AudioLoader.Instance.LoadAudio(this.GetType());
+                            AudioLoader.Instance.Play();
+                            await _aboutViewModel.AudioChanger("1");
+                            canvasView.InvalidateSurface();
+                        }
+                    }
+
+                    if (isMusicBHover)
+                    {
+                        if (isMusicOne)
+                        {
+
+                            _buttonSoundEffect.Play();
+                            isMusicOne = false;
+                            AudioLoader.Instance.AudioChange("2");
+                            AudioLoader.Instance.LoadAudio(this.GetType());
+                            AudioLoader.Instance.Play();
+                            await _aboutViewModel.AudioChanger("2");
+                            canvasView.InvalidateSurface();
+                        }
+                        else if (isMusicOne == false) { }
+                        ;
+                    }
+
                     if (musicsliderHover)
                     {
                         MusicSliderUpdater(sender, e);
@@ -681,8 +855,28 @@ namespace App25.Views
                         isLogoutPressed = true;
                         canvasView.InvalidateSurface();
                         Logout();
-
                     }
+
+
+                    if (isDeleteHover)
+                    {
+                        isDeletePressed = true;
+                        canvasView.InvalidateSurface();
+
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            bool answer = await DisplayAlert("Account Deletion",
+                                                "Do you want to delete your account? \nThis change can't be undone.",
+                                                "Yes",
+                                                "No");
+                            if (answer)
+                            {
+                                await _aboutViewModel.DeleteUser(CurrentUser.User.Username);
+                            }
+                        });
+                    }
+
+
                 }
 
                 if (e.ActionType == SKTouchAction.Moved)
@@ -702,6 +896,13 @@ namespace App25.Views
                         isLogoutPressed = false;
                         canvasView.InvalidateSurface();
                     }
+
+                    if (isDeletePressed && !isDeleteHover)
+                    {
+                        isDeletePressed = false;
+                        canvasView.InvalidateSurface();
+
+                    }
                 }
 
                 if (e.ActionType == SKTouchAction.Released || e.ActionType == SKTouchAction.Cancelled)
@@ -709,6 +910,7 @@ namespace App25.Views
                     wasmusicSLiderPressed = false;
                     wasEffectSliderPressed = false;
                     isLogoutPressed = false;
+                    isDeletePressed = false;
                     canvasView.InvalidateSurface();
                 }
 
@@ -734,8 +936,7 @@ namespace App25.Views
             bool lbButtonPressed = e.Location.X >= lbbuttonX && e.Location.X <= lbbuttonX + lbbuttonWidth &&
                                    e.Location.Y >= lbbuttonY && e.Location.Y <= lbbuttonY + lbbuttonHeight;
 
-            bool logout_Deletelater = e.Location.X >= 0 && e.Location.X <= 100 &&
-                                     e.Location.Y >= 0 && e.Location.Y <= 100;
+
             bool test_Deletelater = e.Location.X >= 0 && e.Location.X <= 100 &&
                                    e.Location.Y >= 100 && e.Location.Y <= 200;
 
@@ -803,15 +1004,6 @@ namespace App25.Views
                             canvasView.InvalidateSurface();
                         }
 
-                        if (logout_Deletelater)
-                        {
-                            _buttonSoundEffect.Play();
-                            Device.BeginInvokeOnMainThread(async () =>
-                            {
-                                _audioLoader.Stop();
-                                await Shell.Current.GoToAsync("//LoginPage");
-                            });
-                        }
 
                         if (test_Deletelater)
                         {
@@ -876,6 +1068,7 @@ namespace App25.Views
         private async void Logout()
         {
             await Shell.Current.GoToAsync("//LoginPage");
+            CurrentUser.User = null;
             AudioLoader.Instance.Stop();
 
         }

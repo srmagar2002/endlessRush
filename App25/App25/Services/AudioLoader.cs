@@ -15,6 +15,7 @@ namespace App25.Services
     {
         private static AudioLoader _instance;
         public ISimpleAudioPlayer player;
+        private string nonGamePageMusic { get; set; } = "App25.assets.audio.themeMusic.miitopiaost.mp3";
         public bool NonGamePageNavigation { get; set; } = false;
 
         public static AudioLoader Instance
@@ -36,12 +37,24 @@ namespace App25.Services
 
         }
 
+        public void AudioChange(string songNo)
+        {
+            if (songNo == "1")
+            {
+                nonGamePageMusic = "App25.assets.audio.themeMusic.miitopiaost.mp3";
+            }
+            else if (songNo == "2")
+            {
+                nonGamePageMusic = "App25.assets.audio.themeMusic.uhh.mp3";
+            }
+        }
+
         public void LoadAudio(Type type)
         {
 
             string audioFile = type == typeof(GamePage)
                       ? "App25.assets.audio.themeMusic.metal.mp3"
-                      : "App25.assets.audio.themeMusic.miitopiaost.mp3";
+                      : nonGamePageMusic;
 
             if (player == null)
             {

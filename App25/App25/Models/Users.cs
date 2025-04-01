@@ -34,5 +34,9 @@ namespace App25.Models
 
         [NotNull]
         public double Music { get; set; } = 0.5;
+
+        [NotNull]
+        public string NonGamePageMusic { get; set; } = "1";
+
     }
 }

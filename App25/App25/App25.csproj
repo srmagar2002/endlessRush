@@ -11,6 +11,7 @@
     <None Remove="assets\audio\electronic.mp3" />
     <None Remove="assets\audio\metal.mp3" />
     <None Remove="assets\audio\themeMusic\miitopiaost.mp3" />
+    <None Remove="assets\audio\themeMusic\uhh.mp3" />
     <None Remove="assets\backgrounds\bg1\background1.png" />
     <None Remove="assets\backgrounds\bg1\ground1.png" />
     <None Remove="assets\backgrounds\bg2\background1.png" />
@@ -34,9 +35,13 @@
     <None Remove="assets\obstacles\obstacle2.png" />
     <None Remove="assets\obstacles\obstacle3.png" />
     <None Remove="assets\others\buttons\applybutton\apply.png" />
+    <None Remove="assets\others\buttons\backbutton\backbutton.png" />
     <None Remove="assets\others\buttons\charbutton\customizebutton.png" />
     <None Remove="assets\others\buttons\leaderboardbutton\lb.png" />
     <None Remove="assets\others\buttons\leaderboardbutton\lbwhite.png" />
+    <None Remove="assets\others\buttons\logoutbutton\logout.png" />
+    <None Remove="assets\others\buttons\musicchangerbutton\musicchanger.png" />
+    <None Remove="assets\others\buttons\musicchangerbutton\musicchangerclicked.png" />
     <None Remove="assets\others\buttons\pauseAndresumeIcon\pauseIcon.png" />
     <None Remove="assets\others\buttons\pauseAndresumeIcon\pauseWhiteIcon.png" />
     <None Remove="assets\others\buttons\pauseAndresumeIcon\resumeIcon.png" />
@@ -84,6 +89,7 @@
     <EmbeddedResource Include="assets\audio\themeMusic\electronic.mp3" />
     <EmbeddedResource Include="assets\audio\themeMusic\metal.mp3" />
     <EmbeddedResource Include="assets\audio\themeMusic\miitopiaost.mp3" />
+    <EmbeddedResource Include="assets\audio\themeMusic\uhh.mp3" />
     <EmbeddedResource Include="assets\backgrounds\bg1\background1.png" />
     <EmbeddedResource Include="assets\backgrounds\bg1\ground1.png" />
     <EmbeddedResource Include="assets\backgrounds\bg2\background1.png" />
@@ -107,10 +113,14 @@
     <EmbeddedResource Include="assets\obstacles\obstacle2.png" />
     <EmbeddedResource Include="assets\obstacles\obstacle3.png" />
     <EmbeddedResource Include="assets\others\buttons\applybutton\apply.png" />
+    <EmbeddedResource Include="assets\others\buttons\backbutton\backbutton.png" />
     <EmbeddedResource Include="assets\others\buttons\charbutton\customizebutton.png" />
     <EmbeddedResource Include="assets\others\buttons\charbutton\customizebuttonactive.png" />
     <EmbeddedResource Include="assets\others\buttons\leaderboardbutton\lb.png" />
     <EmbeddedResource Include="assets\others\buttons\leaderboardbutton\lbwhite.png" />
+    <EmbeddedResource Include="assets\others\buttons\logoutbutton\logout.png" />
+    <EmbeddedResource Include="assets\others\buttons\musicchangerbutton\musicchanger.png" />
+    <EmbeddedResource Include="assets\others\buttons\musicchangerbutton\musicchangerclicked.png" />
     <EmbeddedResource Include="assets\others\buttons\pauseAndresumeIcon\pauseIcon.png" />
     <EmbeddedResource Include="assets\others\buttons\pauseAndresumeIcon\pauseWhiteIcon.png" />
     <EmbeddedResource Include="assets\others\buttons\pauseAndresumeIcon\resumeIcon.png" />
