@@ -1,9 +1,8 @@
-﻿using App25.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace App25
+namespace App25.Models
 {
     public static class CurrentUser
     {

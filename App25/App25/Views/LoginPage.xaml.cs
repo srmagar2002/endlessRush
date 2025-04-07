@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using App25.Services;
+using App25.Models;
 namespace App25.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]

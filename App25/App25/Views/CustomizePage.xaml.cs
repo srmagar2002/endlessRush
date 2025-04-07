@@ -66,6 +66,7 @@ namespace App25.Views
             {new SkinItem("Ninja", ImageSource.FromResource("App25.assets.characters.char2.jump.png"), "char2")},
             {new SkinItem("Detective", ImageSource.FromResource("App25.assets.characters.char3.running1.png"),"char3")},
             {new SkinItem("Gato", ImageSource.FromResource("App25.assets.characters.char4.running1.png"),"char4")},
+             {new SkinItem("Lora",ImageSource.FromResource("App25.assets.characters.char5.jump.png"),"char5")},
          };
 
             Obstacles = new ObservableCollection<SkinItem>

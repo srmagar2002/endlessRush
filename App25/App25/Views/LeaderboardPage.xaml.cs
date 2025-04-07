@@ -118,8 +118,8 @@ namespace App25.Views
 
             string backbutton = "App25.assets.others.buttons.backbutton.backbutton.png";
             backBitmap = _bitmapLoader.LoadBitmapFromResource(backbutton, this.GetType());
-
         }
+
         private void CanvasPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             SKCanvas canvas = e.Surface.Canvas;

@@ -12,6 +12,7 @@ using System.IO;
 using Xamarin.Forms.Xaml;
 using App25.ViewModels;
 using App25.Services;
+using App25.Models;
 
 namespace App25.Views
 {
@@ -247,6 +248,8 @@ namespace App25.Views
                 dinoJumpVelocity = -45;
             }
 
+
+
             canvas.Clear(SKColors.White);
 
             groundY = height - 50;
@@ -259,6 +262,11 @@ namespace App25.Views
 
             dinoY = Math.Min(dinoY, groundY - dinoHeight);
 
+            if (CurrentUser.User.CharacterAsset == "char5")
+            {
+                dinoWidth = 160;
+                dinoHeight = 150;
+            }
 
             // Draw Background
             if (bgbitmap != null)

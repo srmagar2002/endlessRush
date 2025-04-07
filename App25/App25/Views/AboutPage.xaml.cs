@@ -6,6 +6,7 @@ using Xamarin.Essentials;
 using App25.Services;
 using System.ComponentModel;
 using App25.ViewModels;
+using App25.Models;
 
 namespace App25.Views
 {

@@ -30,6 +30,9 @@
     <None Remove="assets\characters\char4\jump.png" />
     <None Remove="assets\characters\char4\running1.png" />
     <None Remove="assets\characters\char4\running2.png" />
+    <None Remove="assets\characters\char5\jump.png" />
+    <None Remove="assets\characters\char5\running1.png" />
+    <None Remove="assets\characters\char5\running2.png" />
     <None Remove="assets\font\PixelifySans.ttf" />
     <None Remove="assets\obstacles\obstacle1.png" />
     <None Remove="assets\obstacles\obstacle2.png" />
@@ -108,6 +111,9 @@
     <EmbeddedResource Include="assets\characters\char4\jump.png" />
     <EmbeddedResource Include="assets\characters\char4\running1.png" />
     <EmbeddedResource Include="assets\characters\char4\running2.png" />
+    <EmbeddedResource Include="assets\characters\char5\jump.png" />
+    <EmbeddedResource Include="assets\characters\char5\running1.png" />
+    <EmbeddedResource Include="assets\characters\char5\running2.png" />
     <EmbeddedResource Include="assets\font\PixelifySans.ttf" />
     <EmbeddedResource Include="assets\obstacles\obstacle1.png" />
     <EmbeddedResource Include="assets\obstacles\obstacle2.png" />
