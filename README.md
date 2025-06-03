@@ -1,6 +1,6 @@
 # Introduction
 
-Endless Rush is a small mobile game project built using Xamarin, SkiaSharp, and SQLite. Inspired by the classic Dino game, Endless Rush adds a personal touch—you can customize the character, obstacles, background, and even the music. The game also features a leaderboard, so you can compete for the highest score!
+Endless Rush is a small mobile game project built using Xamarin, SkiaSharp, and SQLite. It is inspired by the classic Dino game but in endless rush you can customize the character, obstacles, background, and even the music. The game also features a leaderboard, so you can compete for the highest score!
 
 I aimed to implement the MVVM (Model-View-ViewModel) architecture. I'm still learning, so it might not be perfect, but it was a great learning experience.
 
