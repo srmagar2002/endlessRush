@@ -4,6 +4,8 @@ Endless Rush is a small mobile game project built using Xamarin, SkiaSharp, and 
 
 I aimed to implement the MVVM (Model-View-ViewModel) architecture. I'm still learning, so it might not be perfect, but it was a great learning experience.
 
+I used inkscape to create all of the artwork (buttons, logos, etc.) in this game except backgrounds.
+
 **Disclamer**
 This is a fun side project developed for learning purposes. I do not earn any money from this. 
 
