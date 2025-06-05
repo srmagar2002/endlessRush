@@ -6,7 +6,8 @@ I aimed to implement the MVVM (Model-View-ViewModel) architecture. I'm still lea
 
 I used inkscape to create all of the artwork (buttons, logos, etc.) in this game except backgrounds.
 
-**Disclamer**
+
+**Disclamer** <br>
 This is a fun side project developed for learning purposes. I do not earn any money from this. 
 
 Music and Artists:
