@@ -16,6 +16,9 @@ Music and Artists:
 
 All music used in this project belongs to the original creators. I do not own the rights to these tracks.
 
+<p align="center">
+<img style="width:700px" src="images/endlessRush_sample2.gif">
+</p>
 # Installation
 
  **Download**
