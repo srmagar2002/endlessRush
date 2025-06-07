@@ -19,6 +19,7 @@ All music used in this project belongs to the original creators. I do not own th
 <p align="center">
 <img style="width:700px" src="images/endlessRush_sample2.gif">
 </p>
+
 # Installation
 
  **Download**
